@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Espacio de Trabajo — Tablero de Proyecto</title>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Espacio de Trabajo — Tablero de Proyecto</title>
+  <!-- PEGA TU FAVICON AQUÍ -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d1117' stroke='%2330363d' stroke-width='3'/%3E%3Crect x='11' y='14' width='11' height='36' rx='4' fill='%2314b8a6'/%3E%3Crect x='26.5' y='14' width='11' height='24' rx='4' fill='%2322d3ee'/%3E%3Crect x='42' y='14' width='11' height='30' rx='4' fill='%23FF198F'/%3E%3C/svg%3E">  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea, select {
+      user-select: text;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(140, 140, 140, 0.2);
+      border-radius: 999px;
+    }
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --card: #1c2128;
+      --card-border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #0d9488;
+      --accent-hover: #14b8a6;
+      --btn-bg: #21262d;
+      --btn-border: #363b42;
+      --benjamin-color: #FF198F;
+      --sebastian-color: #22d3ee;
+    }
+    .bg-main { background-color: var(--bg); color: var(--text); }
+    .bg-surf { background-color: var(--surface); border-color: var(--card-border); }
+    .bg-card { background-color: var(--card); border-color: var(--card-border); }
+    .text-muted-custom { color: var(--muted); }
+    .btn-custom { background-color: var(--btn-bg); border-color: var(--btn-border); color: var(--text); }
+    .btn-custom:hover { opacity: 0.9; }
+    .btn-accent { background-color: var(--accent); color: #ffffff; }
+
+    /* CHECKBOX MINIMALISTA PERSONALIZADO */
+    .custom-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 1.15rem;
+      height: 1.15rem;
+      border: 1.5px solid var(--btn-border);
+      border-radius: 6px;
+      background-color: var(--bg);
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+      transition: all 0.18s ease-in-out;
+      flex-shrink: 0;
+      outline: none;
+      position: relative;
+    }
+    .custom-checkbox:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+    }
+    .custom-checkbox:checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+    .custom-checkbox::before {
+      content: "";
+      width: 0.65rem;
+      height: 0.65rem;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      transform: scale(0);
+      transform-origin: center;
+      transition: 120ms transform ease-in-out;
+      background-color: #ffffff;
+    }
+    .custom-checkbox:checked::before {
+      transform: scale(1);
+    }
+
+    /* MENÚS DESPLEGABLES ATRACTIVOS (CUSTOM SELECT) */
+    .custom-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 0.85rem;
+      padding-right: 2.2rem;
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      background-color: rgba(22, 27, 34, 0.95);
+      color: #e2e8f0;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    }
+    .custom-select:hover {
+      border-color: rgba(20, 184, 166, 0.6);
+      background-color: rgba(33, 38, 45, 0.98);
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+    }
+    .custom-select:focus {
+      border-color: #14b8a6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.25);
+      background-color: #1c2128;
+    }
+    .custom-select option {
+      background-color: #161b22;
+      color: #e6edf3;
+      padding: 0.5rem;
+    }
+
+    /* VENTANA FLOTANTE DE NOTAS NO INTRUSIVA */
+    #taskNotePopover {
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(51, 65, 85, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    /* MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA */
+    #contextEditPopover {
+      box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.3);
+      backdrop-filter: blur(14px);
+    }
+
+    /* BORDES DESTACADOS DE REVISIÓN VISUAL RÁPIDA */
+    .review-border-sebastian {
+      border-left: 5px solid var(--sebastian-color) !important;
+    }
+    .review-border-benjamin {
+      border-left: 5px solid var(--benjamin-color) !important;
+    }
+    .review-border-both {
+      border-left: 5px solid #a855f7 !important;
+    }
+
+    /* ESTILO DE TAREA BLOQUEADA */
+    .task-blocked {
+      border-color: rgba(244, 63, 94, 0.45) !important;
+      background: linear-gradient(180deg, rgba(244, 63, 94, 0.05) 0%, rgba(28, 33, 40, 1) 100%);
+    }
+
+    .inline-edit-input {
+      background: transparent;
+      outline: none;
+      border-bottom: 2px solid var(--accent);
+      color: #f1f5f9;
+      width: 100%;
+      font-weight: 600;
+    }
+
+    /* MOTOR FÍSICO DE ARRASTRE Y ALTITUD (GPU ACCELERATED) */
+    .kanban-card {
+      transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+      will-change: transform;
+      touch-action: manipulation;
+    }
+
+    /* Tarjeta flotante levantada fuera de la app (Alta Altitud) */
+    .kanban-card-floating {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 9999 !important;
+      pointer-events: none !important;
+      transition: none !important; /* Cero lag al seguir el cursor */
+      box-shadow: 
+        0 32px 64px -12px rgba(0, 0, 0, 0.95),
+        0 18px 36px -18px rgba(0, 0, 0, 0.8),
+        0 0 0 1.5px #14b8a6,
+        0 0 28px rgba(20, 184, 166, 0.35) !important;
+      background-color: #222831 !important;
+      cursor: grabbing !important;
+    }
+
+    /* Animación suave cuando la tarjeta regresa o aterriza en su lugar */
+    .kanban-card-settling {
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease !important;
+    }
+
+    /* Hueco (sombra en el tablero) que deja la tarjeta al ser levantada */
+    .drag-slot-placeholder {
+      border: 2px dashed rgba(20, 184, 166, 0.5);
+      background-color: rgba(13, 148, 136, 0.06);
+      border-radius: 1rem;
+      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.5);
+      transition: all 0.15s ease;
+    }
+
+    .drag-dots {
+      opacity: 0.4;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .kanban-card:hover .drag-dots {
+      opacity: 0.85;
+    }
+    .drag-handle {
+      touch-action: none; /* Evita scroll accidental al arrastrar */
+    }
+    .drag-handle:hover .drag-dots {
+      opacity: 1;
+      transform: scale(1.15);
+      color: #2dd4bf;
+    }
+  </style>
+</head>
+<body class="bg-main min-h-screen flex flex-col relative">
+
+  <!-- ENCABEZADO EXPANDIDO CON SELECTOR DE PERFIL ACTIVO (BENJAMÍN / SEBASTIÁN) -->
+  <header class="border-b border-slate-800/80 bg-surf px-4 sm:px-8 xl:px-12 py-3.5">
+    <div class="max-w-[1720px] w-full mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 rounded-full bg-teal-500 shadow-sm shadow-teal-500/50"></div>
+        <div>
+          <h1 class="font-semibold tracking-tight text-base sm:text-lg text-slate-100">Espacio de Trabajo</h1>
+          <p class="text-[11px] text-muted-custom hidden sm:block">Tablero en tiempo real con arrastre suave y sincronización continua</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Selector de Usuario Activo para Distinguir Acceso -->
+        <div class="flex items-center gap-1 p-1 bg-main/90 rounded-xl border border-slate-800" title="Selecciona quién está usando el tablero en este navegador">
+          <span class="text-[10px] uppercase font-bold text-muted-custom px-2 hidden md:inline">Usuario:</span>
+          <button id="userBtnBenjamin" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all">
+            Benjamín
+          </button>
+          <button id="userBtnSebastian" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all">
+            Sebastián
+          </button>
+        </div>
+
+        <!-- Botón Historial de Actividad Asíncrono con Colores -->
+        <button id="openActivityDrawerBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-700/80 btn-custom text-muted-custom hover:text-slate-100 transition-colors" title="Ver registro reciente de actividad">
+          <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="hidden sm:inline">Historial</span>
+        </button>
+
+        <!-- Indicador de Sincronización en Tiempo Real -->
+        <div id="syncIndicator" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-slate-800 bg-main/50 text-[11px] text-muted-custom" title="Estado de sincronización en tiempo real">
+          <div id="syncDot" class="w-2 h-2 rounded-full bg-teal-500/80"></div>
+          <span id="syncText">En Tiempo Real</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BARRA DE ENTRADA RÁPIDA DE TAREAS (PLACEHOLDER LIMPIO) -->
+  <section class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 pt-5 pb-2">
+    <form id="quickAddForm" class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 bg-surf/60 p-2 sm:p-2.5 rounded-2xl border border-slate-800">
+      <div class="relative flex-1">
+        <input 
+          id="taskTitleInput" 
+          type="text" 
+          placeholder="Agregar nueva tarea o entregable..."
+          class="w-full rounded-xl pl-4 pr-4 py-2.5 text-sm sm:text-base border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 transition-colors text-slate-100 placeholder:text-slate-500"
+          required
+        />
+      </div>
+
+      <!-- Barra de Parámetros de Entrada Rápida -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
+        <!-- Selector Compacto de Fase ('Fase X') -->
+        <select id="taskPhaseSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-semibold outline-none shrink-0" title="Seleccionar Fase del entregable">
+          <!-- Opciones inyectadas dinámicamente -->
+        </select>
+
+        <!-- Selector de Tamaño / Esfuerzo (Solo XS, S, M, L) -->
+        <select id="taskEffortSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-mono font-bold outline-none shrink-0 text-amber-300" title="Tamaño de la tarea">
+          <option value="XS">XS</option>
+          <option value="S" selected>S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+        </select>
+
+        <!-- Selector de Revisión con Colores -->
+        <select id="taskReviewSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-medium outline-none shrink-0" title="Pedir revisión a un compañero">
+          <option value="none">Sin revisión</option>
+          <option value="sebastian">👁️ Sebastián (Cyan)</option>
+          <option value="benjamin">👁️ Benjamín (Rosa)</option>
+          <option value="both">👁️ Ambos compañeros</option>
+        </select>
+
+        <!-- Selector de Fecha Límite -->
+        <div class="flex items-center border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs bg-[#161b22] shrink-0 gap-1.5 shadow-sm" title="Fecha límite opcional">
+          <span class="text-xs text-muted-custom">⏳</span>
+          <input 
+            type="date" 
+            id="taskDeadlineInput" 
+            class="bg-transparent outline-none text-xs text-slate-200 cursor-pointer"
+          />
+        </div>
+
+        <!-- Selector de Prioridad -->
+        <select id="taskPrioritySelect" class="custom-select rounded-xl px-3 py-2 text-xs outline-none shrink-0 font-medium">
+          <option value="normal">🟡 Normal</option>
+          <option value="high">🔴 Alta</option>
+          <option value="low">🟢 Baja</option>
+        </select>
+
+        <!-- Columna de Destino -->
+        <select id="taskColSelect" class="custom-select rounded-xl px-3 py-2 text-xs outline-none shrink-0 font-medium">
+          <option value="todo">Por Hacer</option>
+          <option value="doing">En Progreso</option>
+          <option value="done">Completada</option>
+        </select>
+
+        <button type="submit" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 shrink-0 btn-accent shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          <span>Agregar</span>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- BARRA DE FILTROS DE FASE, REVISIÓN RÁPIDA Y GESTOR DE FASES -->
+  <section class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-2.5">
+    <div class="flex items-center justify-between gap-3 overflow-x-auto pb-1">
+      <div id="phaseChipsContainer" class="flex items-center gap-2 shrink-0 p-1 bg-surf/80 border border-slate-800/90 rounded-2xl shadow-inner">
+        <!-- Chips de fase inyectados dinámicamente -->
+      </div>
+      
+      <div class="flex items-center gap-2 shrink-0 ml-auto">
+        <span class="text-[11px] uppercase tracking-wider text-muted-custom font-semibold mr-1 hidden sm:inline">Revisión:</span>
+        <button id="filterMyReviewBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#FF198F]/40 bg-[#FF198F]/10 text-[#FF198F] hover:bg-[#FF198F]/20 flex items-center gap-1.5 transition-all shadow-sm" title="Filtrar tareas que requieren revisión de Benjamín">
+          <span class="w-2 h-2 rounded-full bg-[#FF198F] shadow-[0_0_8px_#FF198F]"></span>
+          <span>Benjamín</span>
+        </button>
+        <button id="filterPartnerReviewBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 flex items-center gap-1.5 transition-all shadow-sm" title="Filtrar tareas que requieren revisión de Sebastián">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
+          <span>Sebastián</span>
+        </button>
+
+        <!-- Botón Administrar Fases -->
+        <button id="openPhaseManagerBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-medium border border-slate-700/80 btn-custom text-muted-custom hover:text-teal-300 flex items-center gap-1.5 shrink-0 transition-colors shadow-sm" title="Gestionar y personalizar fases del proyecto">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          <span>Fases</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTOR DE COLUMNAS PARA MÓVILES -->
+  <div class="md:hidden px-4 py-2">
+    <div class="grid grid-cols-3 p-1 rounded-xl border border-slate-800 bg-surf">
+      <button class="mobile-tab py-2 rounded-lg text-xs font-medium text-center transition-all text-muted-custom hover:opacity-100" data-col="todo">
+        Por Hacer (<span id="count-todo-mob">0</span>)
+      </button>
+      <button class="mobile-tab py-2 rounded-lg text-xs font-medium text-center transition-all btn-accent" data-col="doing">
+        En Progreso (<span id="count-doing-mob">0</span>)
+      </button>
+      <button class="mobile-tab py-2 rounded-lg text-xs font-medium text-center text-muted-custom hover:opacity-100" data-col="done">
+        Completadas (<span id="count-done-mob">0</span>)
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL DEL TABLERO KANBAN CON ARRASTRE FÍSICO -->
+  <main id="boardContainer" class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-3 flex-1 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
+    
+    <!-- COLUMNA: POR HACER -->
+    <div id="col-todo" class="kanban-col hidden md:flex flex-col rounded-2xl border border-slate-800/80 bg-surf/90 p-4 min-h-[580px] shadow-sm" data-status="todo">
+      <div class="flex items-center justify-between mb-3.5 px-1 pb-2 border-b border-slate-800/80 pointer-events-none">
+        <div class="flex items-center gap-2.5">
+          <h2 class="text-sm font-semibold tracking-tight text-slate-200">Por Hacer</h2>
+          <span id="count-todo" class="text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60 btn-custom font-mono">0</span>
+        </div>
+        <p class="text-[11px] text-muted-custom">Backlog y trabajo planificado</p>
+      </div>
+      <div id="cards-todo" class="cards-dropzone space-y-3.5 flex-1 min-h-[140px] p-1 rounded-xl" data-status="todo"></div>
+    </div>
+
+    <!-- COLUMNA: EN PROGRESO -->
+    <div id="col-doing" class="kanban-col flex flex-col rounded-2xl border border-slate-800/80 bg-surf/90 p-4 min-h-[580px] shadow-sm" data-status="doing">
+      <div class="flex items-center justify-between mb-3.5 px-1 pb-2 border-b border-slate-800/80 pointer-events-none">
+        <div class="flex items-center gap-2.5">
+          <h2 class="text-sm font-semibold tracking-tight text-slate-200">En Progreso</h2>
+          <span id="count-doing" class="text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60 btn-custom font-mono">0</span>
+        </div>
+        <p class="text-[11px] text-muted-custom">En desarrollo activo</p>
+      </div>
+      <div id="cards-doing" class="cards-dropzone space-y-3.5 flex-1 min-h-[140px] p-1 rounded-xl" data-status="doing"></div>
+    </div>
+
+    <!-- COLUMNA: COMPLETADA -->
+    <div id="col-done" class="kanban-col hidden md:flex flex-col rounded-2xl border border-slate-800/80 bg-surf/90 p-4 min-h-[580px] shadow-sm" data-status="done">
+      <div class="flex items-center justify-between mb-3.5 px-1 pb-2 border-b border-slate-800/80 pointer-events-none">
+        <div class="flex items-center gap-2.5">
+          <h2 class="text-sm font-semibold tracking-tight text-slate-200">Completadas</h2>
+          <span id="count-done" class="text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60 btn-custom font-mono">0</span>
+        </div>
+        <p class="text-[11px] text-muted-custom">Entregables finalizados</p>
+      </div>
+      <div id="cards-done" class="cards-dropzone space-y-3.5 flex-1 min-h-[140px] p-1 rounded-xl" data-status="done"></div>
+    </div>
+  </main>
+
+  <!-- MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA -->
+  <div id="contextEditPopover" class="hidden fixed z-50 rounded-2xl bg-surf border border-slate-700 p-3.5 w-84 shadow-2xl transition-all duration-100">
+    <div class="flex items-center justify-between pb-2 border-b border-slate-800 mb-2.5">
+      <span id="contextEditTitle" class="text-[11px] font-semibold text-teal-400 uppercase tracking-wider">Edición Rápida</span>
+      <button id="closeContextEditBtn" class="text-muted-custom hover:text-slate-100 p-0.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="contextEditBody" class="space-y-2.5">
+      <!-- Inyectado dinámicamente -->
+    </div>
+  </div>
+
+  <!-- PANEL DESLIZABLE: HISTORIAL DE ACTIVIDAD RECIENTE -->
+  <div id="activityDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+  <aside id="activityDrawer" class="fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm bg-surf border-l border-slate-700/80 p-5 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <span class="text-base text-teal-400">📋</span>
+        <h3 class="text-sm font-semibold text-slate-100">Registro de Actividad</h3>
+      </div>
+      <button id="closeActivityDrawerBtn" class="text-muted-custom hover:text-slate-100 p-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <p class="text-[11px] text-muted-custom mt-2 mb-3">Acciones realizadas por cada compañero en tiempo real:</p>
+
+    <div id="activityLogList" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+      <!-- Inyectado dinámicamente -->
+    </div>
+
+    <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+      <button id="clearActivityLogBtn" class="text-muted-custom hover:text-rose-400 transition-colors text-[11px]">Limpiar registro</button>
+      <span class="text-[11px] text-muted-custom font-mono">Modo compartido</span>
+    </div>
+  </aside>
+
+  <!-- VENTANA FLOTANTE DE NOTAS (ENTER GUARDA Y CIERRA) -->
+  <div id="taskNotePopover" class="hidden fixed z-50 rounded-2xl bg-surf border border-slate-700/90 p-4 w-[92vw] sm:w-[460px] shadow-2xl transition-all duration-150">
+    <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-slate-800/80">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs text-amber-400">💡</span>
+          <h4 class="text-xs font-semibold tracking-tight text-slate-200">Plan de Ejecución y Estrategia</h4>
+        </div>
+        <p id="notePopoverTaskTitle" class="text-[11px] text-teal-300 font-medium truncate mt-0.5">Título de la tarea...</p>
+      </div>
+      <button id="closeNotePopoverBtn" class="p-1 rounded-lg text-muted-custom hover:text-slate-100 transition-colors" title="Cerrar (o haz clic afuera)">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="mt-3 space-y-2">
+      <textarea 
+        id="notePopoverTextarea" 
+        rows="8" 
+        placeholder="Escribe aquí tu enfoque de resolución, arquitectura o dudas... Presiona Enter para guardar y cerrar (Shift+Enter para salto de línea)."
+        class="w-full rounded-xl p-3 text-xs leading-relaxed border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200 resize-y"
+      ></textarea>
+      
+      <div class="flex items-center justify-between text-[10px] text-muted-custom pt-1">
+        <span>Presiona <strong>Enter</strong> para guardar y cerrar</span>
+        <button id="saveNotePopoverBtn" class="px-3.5 py-1 rounded-lg text-xs font-semibold btn-accent">
+          Guardar (Enter)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GESTOR DE FASES -->
+  <div id="phaseManagerModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="max-w-md w-full rounded-2xl border border-slate-700/80 bg-surf p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800/60">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🎯</span>
+          <div>
+            <h3 class="text-sm font-semibold">Gestionar Fases del Proyecto</h3>
+            <p class="text-[11px] text-muted-custom">Configura los hitos del sprint para tu tablero compartido</p>
+          </div>
+        </div>
+        <button class="closeModalBtn text-muted-custom hover:opacity-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="addPhaseForm" class="flex items-center gap-1.5 pt-1">
+        <input 
+          id="newPhaseNameInput" 
+          type="text" 
+          placeholder="Nombre de la nueva fase... (Presiona Enter)" 
+          class="flex-1 rounded-xl px-3 py-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-100" 
+          required 
+        />
+        <button type="submit" class="px-3.5 py-2 rounded-xl text-xs font-medium btn-accent shrink-0">
+          + Agregar
+        </button>
+      </form>
+
+      <div class="space-y-1.5 pt-1">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-muted-custom">Fases Existentes:</span>
+        <div id="phasesList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+          <!-- Renderizado dinámico -->
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-800/60">
+        <button class="closeModalBtn px-3.5 py-1.5 rounded-xl text-xs border btn-custom">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR DETALLES DE LA TAREA (COMPLETO) -->
+  <div id="editTaskModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="max-w-xl w-full rounded-2xl border border-slate-700/80 bg-surf p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800/60">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          <h3 class="text-sm font-semibold">Editar Tarea Completa</h3>
+        </div>
+        <button class="closeModalBtn text-muted-custom hover:opacity-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="editTaskForm" class="space-y-3.5">
+        <input type="hidden" id="editTaskId" />
+        <input type="hidden" id="editTaskDate" />
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Título de la Tarea</label>
+          <input 
+            type="text" 
+            id="editTaskTitle" 
+            class="w-full rounded-xl p-2.5 text-xs sm:text-sm border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-100" 
+            required 
+          />
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Columna</label>
+            <select id="editTaskStatus" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
+              <option value="todo">Por Hacer</option>
+              <option value="doing">En Progreso</option>
+              <option value="done">Completada</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Prioridad</label>
+            <select id="editTaskPriority" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
+              <option value="normal">🟡 Normal</option>
+              <option value="high">🔴 Alta</option>
+              <option value="low">🟢 Baja</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Tamaño</label>
+            <select id="editTaskEffort" class="custom-select w-full rounded-xl p-2 text-xs outline-none font-mono text-amber-300 font-bold">
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Fase</label>
+            <select id="editTaskPhase" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
+              <!-- Renderizado dinámicamente -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Revisión Requerida</label>
+            <select id="editTaskReview" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
+              <option value="none">Sin revisión</option>
+              <option value="sebastian">👁️ Sebastián (Cyan)</option>
+              <option value="benjamin">👁️ Benjamín (#FF198F)</option>
+              <option value="both">👁️ Ambos compañeros</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Fecha Límite ⏳</label>
+            <input 
+              type="date" 
+              id="editTaskDeadline" 
+              class="w-full rounded-xl p-1.5 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200" 
+            />
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Enlace / Recurso</label>
+            <input 
+              type="url" 
+              id="editTaskLink" 
+              placeholder="https://drive.google.com/..." 
+              class="w-full rounded-xl p-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200" 
+            />
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl border border-slate-800 bg-main/40 space-y-2">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="editTaskIsBlocked" class="custom-checkbox" />
+            <label for="editTaskIsBlocked" class="text-xs font-medium text-rose-300 cursor-pointer">Marcar con Bloqueo / Dependencia</label>
+          </div>
+          <input 
+            type="text" 
+            id="editTaskBlockedReason" 
+            placeholder="Motivo del bloqueo (ej. Falta validar endpoints de autenticación)..." 
+            class="w-full rounded-xl p-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-rose-500/80 text-slate-200" 
+          />
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Ideas de Ejecución y Notas Técnicas</label>
+          <textarea 
+            id="editTaskNotes" 
+            rows="3" 
+            placeholder="Especificaciones, planes de ejecución, ideas o dudas... (Enter guarda el formulario)"
+            class="w-full rounded-xl p-2.5 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800/60">
+          <button type="button" class="closeModalBtn px-3.5 py-2 rounded-xl text-xs border btn-custom">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-medium btn-accent">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm px-4 py-2.5 rounded-xl bg-teal-900/95 text-teal-100 border border-teal-700 text-xs shadow-lg transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none flex items-center gap-2">
+    <svg class="w-4 h-4 shrink-0 text-teal-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    <span id="toastMsg">Notificación</span>
+  </div>
+
+  <!-- LÓGICA DE APLICACIÓN EN JAVASCRIPT -->
+  <script>
+    // =========================================================================
+    // CONSTANTE PARA SINCRONIZACIÓN EN TIEMPO REAL BIDIRECCIONAL
+    // =========================================================================
+    const BACKEND_SYNC_URL = ""; 
+    const DISCORD_WEBHOOK_URL = "";
+
+    const STORAGE_KEY = 'project_kanban_tasks_v6';
+    const PHASES_STORAGE_KEY = 'project_kanban_phases_v1';
+    const ACTIVITY_STORAGE_KEY = 'project_kanban_activity_v2';
+    const USER_STORAGE_KEY = 'project_kanban_active_user_v1';
+    
+    // Fases optimizadas en español
+    const DEFAULT_PHASES = [
+      'Fase 1: Investigación y Prototipado',
+      'Fase 2: Desarrollo y Prospección',
+      'Fase 3: Lanzamiento Comercial'
+    ];
+
+    // Colores para los indicadores de fase
+    const PHASE_DOT_COLORS = [
+      '#6366f1', // Indigo para Fase 1
+      '#06b6d4', // Cyan para Fase 2
+      '#10b981', // Esmeralda para Fase 3
+      '#f59e0b', // Ámbar para Fase 4
+      '#ec4899'  // Rosa para Fase 5
+    ];
+
+    // PLANTILLAS PRE-CONFIGURADAS DE CHECKLISTS
+    const CHECKLIST_TEMPLATES = {
+      investigacion: {
+        name: "Investigación y Validación",
+        steps: [
+          "Definir 5 hipótesis clave del problema",
+          "Entrevistar a 3 dueños de comercios locales",
+          "Sintetizar puntos de dolor comunes",
+          "Diseñar propuesta de valor inicial"
+        ]
+      },
+      web_landing: {
+        name: "Landing Page / Web",
+        steps: [
+          "Redactar copy y propuesta de valor",
+          "Maquetar estructura responsive (móvil y desktop)",
+          "Implementar formulario de contacto o captura de leads",
+          "Verificar despliegue en GitHub Pages / dominio"
+        ]
+      },
+      automatizacion_sheets: {
+        name: "Automatización Google Sheets",
+        steps: [
+          "Estructurar columnas de entrada y validaciones de datos",
+          "Escribir función Apps Script con trigger onEdit/onFormSubmit",
+          "Prueba de estrés con datos de prueba simulados",
+          "Documentar instrucciones de uso para el cliente"
+        ]
+      },
+      backend_api: {
+        name: "Desarrollo API / Integración",
+        steps: [
+          "Definir contratos de entrada y salida JSON",
+          "Implementar lógica de procesamiento y control de errores",
+          "Configurar webhooks y variables de entorno seguras",
+          "Pruebas de conectividad y latencia"
+        ]
+      },
+      entrega_cliente: {
+        name: "Entrega y Demostración",
+        steps: [
+          "Preparar flujo de demostración en vivo (guion)",
+          "Crear credenciales de acceso para el cliente",
+          "Grabar video tutorial corto de 2 minutos",
+          "Confirmar recepción y visto bueno del cliente"
+        ]
+      }
+    };
+
+    // GESTIÓN DEL USUARIO ACTIVO (BENJAMÍN / SEBASTIÁN)
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramUser = urlParams.get('user');
+    let activeUser = 'benjamin';
+
+    if (paramUser && (paramUser.toLowerCase() === 'sebastian' || paramUser.toLowerCase() === 'benjamin')) {
+      activeUser = paramUser.toLowerCase();
+      localStorage.setItem(USER_STORAGE_KEY, activeUser);
+    } else {
+      activeUser = localStorage.getItem(USER_STORAGE_KEY) || 'benjamin';
+    }
+
+    function updateActiveUserUI() {
+      const btnBen = document.getElementById('userBtnBenjamin');
+      const btnSeb = document.getElementById('userBtnSebastian');
+      if (activeUser === 'benjamin') {
+        btnBen.className = 'px-3 py-1 rounded-lg text-xs font-bold border border-[#FF198F]/50 bg-[#FF198F]/20 text-[#FF198F] shadow-[0_0_10px_rgba(255,25,143,0.3)] transition-all';
+        btnSeb.className = 'px-3 py-1 rounded-lg text-xs font-medium text-muted-custom hover:text-slate-200 transition-all';
+      } else {
+        btnSeb.className = 'px-3 py-1 rounded-lg text-xs font-bold border border-cyan-500/50 bg-cyan-500/20 text-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.3)] transition-all';
+        btnBen.className = 'px-3 py-1 rounded-lg text-xs font-medium text-muted-custom hover:text-slate-200 transition-all';
+      }
+    }
+
+    document.getElementById('userBtnBenjamin').addEventListener('click', () => {
+      activeUser = 'benjamin';
+      localStorage.setItem(USER_STORAGE_KEY, activeUser);
+      updateActiveUserUI();
+      showToast('Sesión activa: Benjamín');
+    });
+
+    document.getElementById('userBtnSebastian').addEventListener('click', () => {
+      activeUser = 'sebastian';
+      localStorage.setItem(USER_STORAGE_KEY, activeUser);
+      updateActiveUserUI();
+      showToast('Sesión activa: Sebastián');
+    });
+
+    let phases = [];
+    try {
+      const savedPhases = localStorage.getItem(PHASES_STORAGE_KEY);
+      phases = savedPhases ? JSON.parse(savedPhases) : DEFAULT_PHASES;
+      if (!Array.isArray(phases) || phases.length === 0) phases = DEFAULT_PHASES;
+    } catch(e) {
+      phases = DEFAULT_PHASES;
+    }
+
+    let activityLog = [];
+    try {
+      const savedAct = localStorage.getItem(ACTIVITY_STORAGE_KEY);
+      activityLog = savedAct ? JSON.parse(savedAct) : [];
+      if (!Array.isArray(activityLog)) activityLog = [];
+    } catch(e) {
+      activityLog = [];
+    }
+
+    const openSubtasksTaskIds = new Set();
+    let currentPhaseFilter = 'all';
+    let currentReviewFilter = 'all';
+
+    const DEFAULT_TASKS = [
+      {
+        id: 'pt-1',
+        title: 'Diseñar cuestionario inicial de investigación de mercado',
+        status: 'doing',
+        priority: 'high',
+        effort: 'S',
+        phase: phases[0],
+        date: new Date().toLocaleDateString('es-CL'),
+        deadline: new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
+        reviewFor: 'sebastian',
+        link: 'https://docs.google.com/document/d/sample',
+        isBlocked: false,
+        blockedReason: '',
+        notes: 'Enfoque propuesto: Probar preguntas presencialmente con 5 negocios locales antes de enviar formularios digitales.',
+        updatedAt: Date.now() - (52 * 3600 * 1000),
+        subtasks: [
+          { id: 'pst-1', text: 'Definir 5 puntos de dolor operativo', done: true },
+          { id: 'pst-2', text: 'Revisar redacción para público no técnico', done: false }
+        ]
+      },
+      {
+        id: 'pt-2',
+        title: 'Configurar flujo automatizado de respuestas en Google Sheets',
+        status: 'todo',
+        priority: 'normal',
+        effort: 'M',
+        phase: phases[1] || phases[0],
+        date: new Date().toLocaleDateString('es-CL'),
+        deadline: '',
+        reviewFor: 'benjamin',
+        link: '',
+        isBlocked: true,
+        blockedReason: 'Falta validar los campos finales del formulario',
+        notes: 'Detalle técnico: Script para estandarizar números de contacto y estructurar respuestas automáticamente.',
+        updatedAt: Date.now(),
+        subtasks: []
+      }
+    ];
+
+    let tasks = [];
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      tasks = saved ? JSON.parse(saved) : DEFAULT_TASKS;
+    } catch (e) {
+      tasks = DEFAULT_TASKS;
+    }
+
+    // REGISTRO DE ACTIVIDAD ASÍNCRONO
+    function recordActivity(actionText) {
+      const timestamp = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) + ' • ' + new Date().toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
+      activityLog.unshift({
+        text: actionText,
+        time: timestamp,
+        user: activeUser
+      });
+      if (activityLog.length > 25) activityLog.pop();
+      try {
+        localStorage.setItem(ACTIVITY_STORAGE_KEY, JSON.stringify(activityLog));
+      } catch(e) {}
+      renderActivityLog();
+    }
+
+    function renderActivityLog() {
+      const list = document.getElementById('activityLogList');
+      list.innerHTML = '';
+      if (activityLog.length === 0) {
+        list.innerHTML = '<p class="text-xs text-muted-custom italic p-2">Sin actividad reciente registrada.</p>';
+        return;
+      }
+
+      activityLog.forEach(act => {
+        const item = document.createElement('div');
+        const isBen = (act.user || 'benjamin') === 'benjamin';
+        const userBadgeClass = isBen 
+          ? 'border-[#FF198F]/50 bg-[#FF198F]/15 text-[#FF198F]' 
+          : 'border-cyan-400/50 bg-cyan-950/70 text-cyan-300';
+        const userName = isBen ? 'Benjamín' : 'Sebastián';
+
+        item.className = 'p-3 rounded-xl border border-slate-800 bg-main text-xs space-y-1.5 shadow-sm';
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${userBadgeClass}">
+              ${userName}
+            </span>
+            <span class="text-[10px] text-muted-custom">${escapeHtml(act.time)}</span>
+          </div>
+          <div class="text-slate-200 font-medium leading-snug text-xs">${escapeHtml(act.text)}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function savePhases() {
+      try {
+        localStorage.setItem(PHASES_STORAGE_KEY, JSON.stringify(phases));
+      } catch(e) {
+        console.error('Error al guardar fases:', e);
+      }
+      renderPhasesUI();
+      renderBoard();
+    }
+
+    // ==========================================
+    // GESTIÓN DINÁMICA DE FASES (ATRACTIVA Y ELEGANTE)
+    // ==========================================
+    const phaseChipsContainer = document.getElementById('phaseChipsContainer');
+    const taskPhaseSelect = document.getElementById('taskPhaseSelect');
+    const editTaskPhase = document.getElementById('editTaskPhase');
+    const phasesList = document.getElementById('phasesList');
+    const phaseManagerModal = document.getElementById('phaseManagerModal');
+
+    function renderPhasesUI() {
+      // 1. Selector de Nueva Tarea: Solo 'Fase X'
+      taskPhaseSelect.innerHTML = phases.map((p, idx) => 
+        `<option value="${escapeHtml(p)}" title="${escapeHtml(p)}">Fase ${idx + 1}</option>`
+      ).join('');
+
+      // 2. Selector en Modal de Edición
+      editTaskPhase.innerHTML = phases.map((p, idx) => 
+        `<option value="${escapeHtml(p)}">Fase ${idx + 1}: ${escapeHtml(p.replace(/^Fase\s*\d+[:\s-]*/i, ''))}</option>`
+      ).join('');
+
+      // 3. Renderizado de Chips de Filtro con diseño pulido
+      phaseChipsContainer.innerHTML = '';
+      
+      const isAllActive = currentPhaseFilter === 'all' && currentReviewFilter === 'all';
+      const allBtn = document.createElement('button');
+      allBtn.className = `phase-chip px-3.5 py-1.5 rounded-xl text-xs font-semibold border shrink-0 transition-all shadow-sm flex items-center gap-1.5 ${
+        isAllActive 
+          ? 'bg-teal-500/20 text-teal-200 border-teal-500/80 shadow-[0_0_15px_rgba(13,148,136,0.3)] ring-1 ring-teal-500/40' 
+          : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-800/50'
+      }`;
+      allBtn.setAttribute('data-phase', 'all');
+      allBtn.innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full ${isAllActive ? 'bg-teal-400 animate-pulse' : 'bg-slate-500'}"></span>
+        <span>Todas las Fases</span>
+        <span class="${isAllActive ? 'bg-teal-500/30 text-teal-100' : 'bg-slate-800/90 text-slate-400'} px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ml-1">${tasks.length}</span>
+      `;
+      allBtn.addEventListener('click', () => {
+        currentPhaseFilter = 'all';
+        currentReviewFilter = 'all';
+        resetReviewFilterButtons();
+        renderPhasesUI();
+        renderBoard();
+      });
+      phaseChipsContainer.appendChild(allBtn);
+
+      phases.forEach((p, idx) => {
+        const count = tasks.filter(t => t.phase === p).length;
+        const isActive = currentPhaseFilter === p;
+        const dotColor = PHASE_DOT_COLORS[idx % PHASE_DOT_COLORS.length];
+        const btn = document.createElement('button');
+        
+        btn.className = `phase-chip px-3.5 py-1.5 rounded-xl text-xs font-semibold border shrink-0 transition-all shadow-sm flex items-center gap-1.5 ${
+          isActive 
+            ? 'bg-teal-500/20 text-teal-200 border-teal-500/80 shadow-[0_0_15px_rgba(13,148,136,0.3)] ring-1 ring-teal-500/40' 
+            : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-800/50'
+        }`;
+        btn.setAttribute('data-phase', p);
+        btn.title = p;
+        btn.innerHTML = `
+          <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${dotColor}; box-shadow: ${isActive ? `0 0 8px ${dotColor}` : 'none'};"></span>
+          <span>${escapeHtml(p)}</span>
+          <span class="${isActive ? 'bg-teal-500/30 text-teal-100' : 'bg-slate-800/90 text-slate-400'} px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ml-1">${count}</span>
+        `;
+        btn.addEventListener('click', () => {
+          currentPhaseFilter = p;
+          currentReviewFilter = 'all';
+          resetReviewFilterButtons();
+          renderPhasesUI();
+          renderBoard();
+        });
+        phaseChipsContainer.appendChild(btn);
+      });
+
+      // 4. Lista del Administrador de Fases
+      phasesList.innerHTML = '';
+      phases.forEach((p, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 p-2 rounded-xl border border-slate-800 bg-main text-xs';
+        row.innerHTML = `
+          <span class="text-teal-400 font-mono font-semibold shrink-0">Fase ${index + 1}:</span>
+          <input type="text" value="${escapeHtml(p)}" class="phaseEditInput flex-1 bg-transparent border-b border-transparent focus:border-teal-500 outline-none text-slate-200 px-1 py-0.5" />
+          <button class="savePhaseNameBtn text-muted-custom hover:text-teal-400 p-1" title="Guardar nombre">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <button class="deletePhaseBtn text-muted-custom hover:text-rose-400 p-1" title="Eliminar fase">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        `;
+
+        const input = row.querySelector('.phaseEditInput');
+        const saveBtn = row.querySelector('.savePhaseNameBtn');
+        const deleteBtn = row.querySelector('.deletePhaseBtn');
+
+        const saveNewName = () => {
+          const val = input.value.trim();
+          if (val && val !== p) {
+            tasks.forEach(t => {
+              if (t.phase === p) t.phase = val;
+            });
+            phases[index] = val;
+            if (currentPhaseFilter === p) currentPhaseFilter = val;
+            savePhases();
+            saveTasks(false);
+            recordActivity(`Fase renombrada a "${val}"`);
+            showToast('Fase actualizada');
+          }
+        };
+
+        input.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            saveNewName();
+          }
+        });
+        saveBtn.addEventListener('click', saveNewName);
+
+        deleteBtn.addEventListener('click', () => {
+          if (phases.length <= 1) {
+            showToast('Debes mantener al menos una fase activa.');
+            return;
+          }
+          const removed = phases.splice(index, 1)[0];
+          tasks.forEach(t => {
+            if (t.phase === removed) t.phase = phases[0];
+          });
+          if (currentPhaseFilter === removed) currentPhaseFilter = 'all';
+          savePhases();
+          saveTasks(false);
+          recordActivity(`Fase eliminada: "${removed}"`);
+          showToast(`Fase eliminada: ${removed}`);
+        });
+
+        phasesList.appendChild(row);
+      });
+    }
+
+    function resetReviewFilterButtons() {
+      const btnBen = document.getElementById('filterMyReviewBtn');
+      const btnSeb = document.getElementById('filterPartnerReviewBtn');
+      if (currentReviewFilter === 'benjamin') {
+        btnBen.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#FF198F] bg-[#FF198F]/30 text-white flex items-center gap-1.5 transition-all ring-1 ring-[#FF198F] shadow-[0_0_12px_rgba(255,25,143,0.35)]';
+        btnSeb.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 flex items-center gap-1.5 transition-all shadow-sm';
+      } else if (currentReviewFilter === 'sebastian') {
+        btnSeb.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-cyan-400 bg-cyan-500/30 text-white flex items-center gap-1.5 transition-all ring-1 ring-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.35)]';
+        btnBen.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#FF198F]/40 bg-[#FF198F]/10 text-[#FF198F] hover:bg-[#FF198F]/20 flex items-center gap-1.5 transition-all shadow-sm';
+      } else {
+        btnBen.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#FF198F]/40 bg-[#FF198F]/10 text-[#FF198F] hover:bg-[#FF198F]/20 flex items-center gap-1.5 transition-all shadow-sm';
+        btnSeb.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 flex items-center gap-1.5 transition-all shadow-sm';
+      }
+    }
+
+    document.getElementById('filterMyReviewBtn').addEventListener('click', () => {
+      currentReviewFilter = currentReviewFilter === 'benjamin' ? 'all' : 'benjamin';
+      resetReviewFilterButtons();
+      renderBoard();
+    });
+
+    document.getElementById('filterPartnerReviewBtn').addEventListener('click', () => {
+      currentReviewFilter = currentReviewFilter === 'sebastian' ? 'all' : 'sebastian';
+      resetReviewFilterButtons();
+      renderBoard();
+    });
+
+    document.getElementById('openPhaseManagerBtn').addEventListener('click', () => {
+      phaseManagerModal.classList.remove('hidden');
+    });
+
+    document.getElementById('addPhaseForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('newPhaseNameInput');
+      const val = input.value.trim();
+      if (!val) return;
+      if (phases.includes(val)) {
+        showToast('Ese nombre de fase ya existe.');
+        return;
+      }
+      phases.push(val);
+      input.value = '';
+      savePhases();
+      recordActivity(`Nueva fase añadida: "${val}"`);
+      showToast(`Fase agregada: ${val}`);
+    });
+
+    // ==========================================
+    // HISTORIAL ASÍNCRONO DRAWER HANDLERS
+    // ==========================================
+    const activityDrawer = document.getElementById('activityDrawer');
+    const activityDrawerBackdrop = document.getElementById('activityDrawerBackdrop');
+    const openActivityDrawerBtn = document.getElementById('openActivityDrawerBtn');
+    const closeActivityDrawerBtn = document.getElementById('closeActivityDrawerBtn');
+    const clearActivityLogBtn = document.getElementById('clearActivityLogBtn');
+
+    function toggleActivityDrawer(open) {
+      if (open) {
+        activityDrawerBackdrop.classList.remove('hidden');
+        activityDrawer.classList.remove('translate-x-full');
+      } else {
+        activityDrawer.classList.add('translate-x-full');
+        activityDrawerBackdrop.classList.add('hidden');
+      }
+    }
+
+    openActivityDrawerBtn.addEventListener('click', () => toggleActivityDrawer(true));
+    closeActivityDrawerBtn.addEventListener('click', () => toggleActivityDrawer(false));
+    activityDrawerBackdrop.addEventListener('click', () => toggleActivityDrawer(false));
+
+    clearActivityLogBtn.addEventListener('click', () => {
+      activityLog = [];
+      localStorage.removeItem(ACTIVITY_STORAGE_KEY);
+      renderActivityLog();
+      showToast('Historial limpio');
+    });
+
+    // ==========================================
+    // EDICIÓN CONTEXTUAL DIRECTA (MINI-POPOVER)
+    // ==========================================
+    const contextEditPopover = document.getElementById('contextEditPopover');
+    const contextEditTitle = document.getElementById('contextEditTitle');
+    const contextEditBody = document.getElementById('contextEditBody');
+    const closeContextEditBtn = document.getElementById('closeContextEditBtn');
+
+    let activeContextTaskId = null;
+
+    function openContextPopover(title, htmlContent, targetEl) {
+      contextEditTitle.textContent = title;
+      contextEditBody.innerHTML = htmlContent;
+
+      const rect = targetEl.getBoundingClientRect();
+      const popoverWidth = 330;
+      let left = Math.max(12, rect.left);
+      let top = rect.bottom + 8;
+
+      if (left + popoverWidth > window.innerWidth - 12) {
+        left = window.innerWidth - popoverWidth - 12;
+      }
+      if (top + 280 > window.innerHeight) {
+        top = Math.max(12, rect.top - 290);
+      }
+
+      contextEditPopover.style.top = `${top}px`;
+      contextEditPopover.style.left = `${left}px`;
+      contextEditPopover.classList.remove('hidden');
+    }
+
+    function closeContextPopover() {
+      contextEditPopover.classList.add('hidden');
+      activeContextTaskId = null;
+    }
+
+    closeContextEditBtn.addEventListener('click', closeContextPopover);
+
+    // ==========================================
+    // VENTANA FLOTANTE DE NOTAS (ENTER GUARDA Y CIERRA)
+    // ==========================================
+    const taskNotePopover = document.getElementById('taskNotePopover');
+    const notePopoverTaskTitle = document.getElementById('notePopoverTaskTitle');
+    const notePopoverTextarea = document.getElementById('notePopoverTextarea');
+    const closeNotePopoverBtn = document.getElementById('closeNotePopoverBtn');
+    const saveNotePopoverBtn = document.getElementById('saveNotePopoverBtn');
+
+    let activeNoteTaskId = null;
+
+    function openNotePopover(task, triggerBtn) {
+      if (activeNoteTaskId && activeNoteTaskId !== task.id) {
+        commitActiveNote();
+      }
+
+      activeNoteTaskId = task.id;
+      notePopoverTaskTitle.textContent = task.title;
+      notePopoverTextarea.value = task.notes || '';
+
+      const rect = triggerBtn.getBoundingClientRect();
+      const popoverWidth = Math.min(460, window.innerWidth * 0.92);
+      
+      let top = rect.bottom + 8;
+      let left = Math.max(12, rect.left - (popoverWidth / 2) + 16);
+
+      if (left + popoverWidth > window.innerWidth - 12) {
+        left = window.innerWidth - popoverWidth - 12;
+      }
+      if (top + 280 > window.innerHeight) {
+        top = Math.max(12, rect.top - 290);
+      }
+
+      taskNotePopover.style.top = `${top}px`;
+      taskNotePopover.style.left = `${left}px`;
+      taskNotePopover.classList.remove('hidden');
+      notePopoverTextarea.focus();
+    }
+
+    function commitActiveNote() {
+      if (!activeNoteTaskId) return;
+      const t = tasks.find(item => item.id === activeNoteTaskId);
+      if (t) {
+        const newNotes = notePopoverTextarea.value.trim();
+        if (t.notes !== newNotes) {
+          t.notes = newNotes;
+          t.updatedAt = Date.now();
+          saveTasks(true);
+          recordActivity(`Notas actualizadas en "${t.title}"`);
+          showToast('Notas guardadas');
+        }
+      }
+      activeNoteTaskId = null;
+    }
+
+    function closeNotePopover() {
+      if (!taskNotePopover.classList.contains('hidden')) {
+        commitActiveNote();
+        taskNotePopover.classList.add('hidden');
+      }
+    }
+
+    closeNotePopoverBtn.addEventListener('click', closeNotePopover);
+    saveNotePopoverBtn.addEventListener('click', closeNotePopover);
+
+    // REGLA: Enter guarda y cierra la nota (Shift+Enter para salto de línea)
+    notePopoverTextarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        closeNotePopover();
+      }
+    });
+
+    // Cerrar popovers al hacer clic afuera
+    document.addEventListener('click', (e) => {
+      if (!taskNotePopover.classList.contains('hidden')) {
+        if (!taskNotePopover.contains(e.target) && !e.target.closest('.openNoteBtn')) {
+          closeNotePopover();
+        }
+      }
+      if (!contextEditPopover.classList.contains('hidden')) {
+        if (!contextEditPopover.contains(e.target) && !e.target.closest('.context-trigger')) {
+          closeContextPopover();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (!taskNotePopover.classList.contains('hidden')) closeNotePopover();
+        if (!contextEditPopover.classList.contains('hidden')) closeContextPopover();
+        if (!editTaskModal.classList.contains('hidden')) editTaskModal.classList.add('hidden');
+        if (!phaseManagerModal.classList.contains('hidden')) phaseManagerModal.classList.add('hidden');
+        if (!activityDrawer.classList.contains('translate-x-full')) toggleActivityDrawer(false);
+      }
+    });
+
+    // REGLA GLOBAL: Enter en el modal guarda y cierra
+    document.getElementById('editTaskForm').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'BUTTON') {
+        e.preventDefault();
+        document.getElementById('editTaskForm').requestSubmit();
+      }
+    });
+
+    // ==========================================
+    // INTEGRACIÓN DISCORD WEBHOOK
+    // ==========================================
+    async function notifyDiscordTaskCompleted(task) {
+      if (!DISCORD_WEBHOOK_URL || !DISCORD_WEBHOOK_URL.startsWith('https://discord.com/api/webhooks/')) return;
+      try {
+        const payload = {
+          embeds: [{
+            title: "🚀 ¡Entregable Completado!",
+            description: `**${task.title}**`,
+            color: 890074, // #0d9488 teal
+            fields: [
+              { name: "Fase", value: task.phase || phases[0], inline: true },
+              { name: "Prioridad", value: (task.priority || "normal").toUpperCase(), inline: true },
+              { name: "Tamaño", value: task.effort || "S", inline: true },
+              { name: "Fecha Límite", value: task.deadline || "Sin fecha límite", inline: true },
+              { name: "Completado por", value: activeUser === 'benjamin' ? 'Benjamín' : 'Sebastián', inline: true }
+            ],
+            footer: { text: "Espacio de Trabajo • Tablero Compartido" },
+            timestamp: new Date().toISOString()
+          }]
+        };
+
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showToast('Discord notificado 🚀');
+      } catch (err) {
+        console.error('Fallo en notificación a Discord:', err);
+      }
+    }
+
+    // =========================================================================
+    // AUTO-SINCRONIZACIÓN EN TIEMPO REAL (PUSH CONTINUO Y POLLING RÁPIDO)
+    // =========================================================================
+    async function fetchRemoteTasks() {
+      if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) {
+        document.getElementById('syncIndicator').classList.add('opacity-40');
+        document.getElementById('syncText').textContent = 'Modo Local';
+        return;
+      }
+
+      const syncDot = document.getElementById('syncDot');
+      const syncText = document.getElementById('syncText');
+
+      try {
+        const res = await fetch(BACKEND_SYNC_URL, { method: 'GET', mode: 'cors' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const remoteTasks = Array.isArray(data) ? data : (data.tasks || []);
+
+        if (Array.isArray(remoteTasks) && remoteTasks.length > 0) {
+          let updatedAny = false;
+          remoteTasks.forEach(rt => {
+            const rawTitle = (rt.title || '').trim();
+            if (!rawTitle) return;
+            const normKey = rawTitle.toLowerCase();
+            const existing = tasks.find(t => (t.title || '').trim().toLowerCase() === normKey);
+
+            if (!existing) {
+              tasks.push({
+                id: rt.id || `remote-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+                title: rawTitle,
+                status: (rt.status || 'todo').toLowerCase(),
+                priority: (rt.priority || 'normal').toLowerCase(),
+                effort: rt.effort || 'S',
+                phase: rt.phase || phases[0],
+                date: rt.date || new Date().toLocaleDateString('es-CL'),
+                deadline: rt.deadline || '',
+                reviewFor: rt.reviewFor || 'none',
+                link: rt.link || '',
+                isBlocked: Boolean(rt.isBlocked),
+                blockedReason: rt.blockedReason || '',
+                notes: rt.notes || '',
+                updatedAt: rt.updatedAt || Date.now(),
+                subtasks: Array.isArray(rt.subtasks) ? rt.subtasks : []
+              });
+              updatedAny = true;
+            } else if (rt.updatedAt && (!existing.updatedAt || rt.updatedAt > existing.updatedAt)) {
+              existing.status = (rt.status || existing.status).toLowerCase();
+              existing.priority = rt.priority || existing.priority;
+              existing.effort = rt.effort || existing.effort;
+              existing.phase = rt.phase || existing.phase;
+              existing.reviewFor = rt.reviewFor || existing.reviewFor;
+              existing.link = rt.link !== undefined ? rt.link : existing.link;
+              existing.isBlocked = rt.isBlocked !== undefined ? Boolean(rt.isBlocked) : existing.isBlocked;
+              existing.blockedReason = rt.blockedReason || existing.blockedReason;
+              existing.notes = rt.notes !== undefined ? rt.notes : existing.notes;
+              existing.deadline = rt.deadline !== undefined ? rt.deadline : existing.deadline;
+              existing.updatedAt = rt.updatedAt;
+              if (Array.isArray(rt.subtasks)) existing.subtasks = rt.subtasks;
+              updatedAny = true;
+            }
+          });
+
+          if (updatedAny) {
+            saveTasks(false);
+          }
+        }
+
+        syncDot.className = 'w-2 h-2 rounded-full bg-teal-500';
+        syncText.textContent = 'En Tiempo Real';
+      } catch (err) {
+        syncDot.className = 'w-2 h-2 rounded-full bg-rose-500';
+        syncText.textContent = 'Sin conexión';
+        console.warn('Verificación de sincronización:', err);
+      }
+    }
+
+    async function pushTasksToRemote() {
+      if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) return;
+      try {
+        await fetch(BACKEND_SYNC_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'push_update',
+            user: activeUser,
+            tasks: tasks,
+            timestamp: Date.now()
+          })
+        });
+      } catch(err) {
+        console.warn('Fallo al emitir actualización inmediata:', err);
+      }
+    }
+
+    function saveTasks(triggerRemote = true) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      } catch (e) {
+        console.error('Error al guardar tareas:', e);
+      }
+      renderBoard();
+      renderPhasesUI();
+
+      if (triggerRemote) {
+        pushTasksToRemote();
+      }
+    }
+
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    // SELECTOR DE COLUMNAS PARA MÓVILES
+    document.querySelectorAll('.mobile-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const activeCol = tab.getAttribute('data-col');
+        document.querySelectorAll('.mobile-tab').forEach((t) => {
+          t.classList.remove('btn-accent');
+          t.classList.add('text-muted-custom');
+        });
+        tab.classList.add('btn-accent');
+        tab.classList.remove('text-muted-custom');
+
+        document.querySelectorAll('.kanban-col').forEach((col) => {
+          if (col.getAttribute('data-status') === activeCol) {
+            col.classList.remove('hidden');
+          } else {
+            col.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // ==========================================
+    // MODAL DE EDICIÓN DE TAREAS (COMPLETO)
+    // ==========================================
+    const editTaskModal = document.getElementById('editTaskModal');
+    const editTaskId = document.getElementById('editTaskId');
+    const editTaskTitle = document.getElementById('editTaskTitle');
+    const editTaskStatus = document.getElementById('editTaskStatus');
+    const editTaskPriority = document.getElementById('editTaskPriority');
+    const editTaskEffort = document.getElementById('editTaskEffort');
+    const editTaskDate = document.getElementById('editTaskDate');
+    const editTaskDeadline = document.getElementById('editTaskDeadline');
+    const editTaskReview = document.getElementById('editTaskReview');
+    const editTaskLink = document.getElementById('editTaskLink');
+    const editTaskIsBlocked = document.getElementById('editTaskIsBlocked');
+    const editTaskBlockedReason = document.getElementById('editTaskBlockedReason');
+    const editTaskNotes = document.getElementById('editTaskNotes');
+
+    function openEditModal(task) {
+      if (!task) return;
+      editTaskId.value = task.id;
+      editTaskTitle.value = task.title || '';
+      editTaskStatus.value = task.status || 'todo';
+      editTaskPriority.value = (task.priority || 'normal').toLowerCase();
+      editTaskEffort.value = task.effort || 'S';
+      
+      if (task.phase && phases.includes(task.phase)) {
+        editTaskPhase.value = task.phase;
+      } else {
+        editTaskPhase.value = phases[0] || '';
+      }
+
+      if (editTaskDate) editTaskDate.value = task.date || '';
+      editTaskDeadline.value = task.deadline || '';
+      editTaskReview.value = task.reviewFor || 'none';
+      editTaskLink.value = task.link || '';
+      editTaskIsBlocked.checked = Boolean(task.isBlocked);
+      editTaskBlockedReason.value = task.blockedReason || '';
+      editTaskNotes.value = task.notes || '';
+      
+      editTaskModal.classList.remove('hidden');
+      editTaskTitle.focus();
+    }
+
+    document.getElementById('editTaskForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = editTaskId.value;
+      const target = tasks.find(t => t.id === id);
+      if (target) {
+        const wasDone = target.status === 'done';
+        const oldBlocked = target.isBlocked;
+        const oldReview = target.reviewFor;
+
+        target.title = editTaskTitle.value.trim();
+        target.status = editTaskStatus.value;
+        target.priority = editTaskPriority.value;
+        target.effort = editTaskEffort.value;
+        target.phase = editTaskPhase.value;
+        if (editTaskDate) target.date = editTaskDate.value.trim();
+        target.deadline = editTaskDeadline.value.trim();
+        target.reviewFor = editTaskReview.value;
+        target.link = editTaskLink.value.trim();
+        target.isBlocked = editTaskIsBlocked.checked;
+        target.blockedReason = editTaskBlockedReason.value.trim();
+        target.notes = editTaskNotes.value.trim();
+        target.updatedAt = Date.now();
+
+        if (target.status === 'done' && !wasDone) {
+          notifyDiscordTaskCompleted(target);
+          recordActivity(`Completó entregable "${target.title}"`);
+        } else if (target.isBlocked && !oldBlocked) {
+          recordActivity(`Marcó bloqueo en "${target.title}" (${target.blockedReason || 'sin motivo'})`);
+        } else if (target.reviewFor !== oldReview && target.reviewFor !== 'none') {
+          const who = target.reviewFor === 'sebastian' ? 'Sebastián' : target.reviewFor === 'benjamin' ? 'Benjamín' : 'Ambos';
+          recordActivity(`Solicitó revisión de ${who} en "${target.title}"`);
+        } else {
+          recordActivity(`Actualizó tarea "${target.title}"`);
+        }
+
+        saveTasks(true);
+        showToast('Tarea actualizada');
+      }
+      editTaskModal.classList.add('hidden');
+    });
+
+    // ==========================================
+    // RENDERIZADO DEL TABLERO
+    // ==========================================
+    function renderBoard() {
+      const colTodo = document.getElementById('cards-todo');
+      const colDoing = document.getElementById('cards-doing');
+      const colDone = document.getElementById('cards-done');
+
+      colTodo.innerHTML = '';
+      colDoing.innerHTML = '';
+      colDone.innerHTML = '';
+
+      // Filtrar tareas por fase y filtro de revisión
+      const filteredTasks = tasks.filter(t => {
+        const matchesPhase = (currentPhaseFilter === 'all') || (t.phase === currentPhaseFilter);
+        let matchesReview = true;
+        if (currentReviewFilter === 'benjamin') {
+          matchesReview = (t.reviewFor === 'benjamin' || t.reviewFor === 'both');
+        } else if (currentReviewFilter === 'sebastian') {
+          matchesReview = (t.reviewFor === 'sebastian' || t.reviewFor === 'both');
+        }
+        return matchesPhase && matchesReview;
+      });
+
+      const todoItems = filteredTasks.filter(t => t.status === 'todo');
+      const doingItems = filteredTasks.filter(t => t.status === 'doing');
+      const doneItems = filteredTasks.filter(t => t.status === 'done');
+
+      document.getElementById('count-todo').textContent = todoItems.length;
+      document.getElementById('count-doing').textContent = doingItems.length;
+      document.getElementById('count-done').textContent = doneItems.length;
+
+      document.getElementById('count-todo-mob').textContent = todoItems.length;
+      document.getElementById('count-doing-mob').textContent = doingItems.length;
+      document.getElementById('count-done-mob').textContent = doneItems.length;
+
+      filteredTasks.forEach((task) => {
+        const cardEl = createCardElement(task);
+        if (task.status === 'todo') colTodo.appendChild(cardEl);
+        else if (task.status === 'doing') colDoing.appendChild(cardEl);
+        else if (task.status === 'done') colDone.appendChild(cardEl);
+      });
+    }
+
+    function createCardElement(task) {
+      const card = document.createElement('div');
+      
+      let reviewClass = '';
+      if (task.reviewFor === 'sebastian') reviewClass = 'review-border-sebastian ring-1 ring-cyan-500/20';
+      else if (task.reviewFor === 'benjamin') reviewClass = 'review-border-benjamin ring-1 ring-[#FF198F]/20';
+      else if (task.reviewFor === 'both') reviewClass = 'review-border-both ring-1 ring-purple-500/20';
+
+      const blockedClass = task.isBlocked ? 'task-blocked' : '';
+
+      card.className = `kanban-card rounded-2xl border p-4 bg-card border-slate-700/80 shadow-md ${reviewClass} ${blockedClass} relative`;
+      card.setAttribute('data-id', task.id);
+
+      const completedCount = (task.subtasks || []).filter(s => s.done).length;
+      const totalCount = (task.subtasks || []).length;
+      const isExpanded = openSubtasksTaskIds.has(task.id);
+      const hasNotes = Boolean((task.notes || '').trim());
+      const hasLink = Boolean((task.link || '').trim());
+      const effort = task.effort || 'S';
+
+      const priority = (task.priority || 'normal').toLowerCase();
+      let badgeStyle = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+      let priorityText = 'NORMAL';
+      if (priority === 'high') {
+        badgeStyle = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+        priorityText = 'ALTA';
+      } else if (priority === 'low') {
+        badgeStyle = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+        priorityText = 'BAJA';
+      }
+
+      const phaseIdx = phases.indexOf(task.phase);
+      const phaseBadgeText = phaseIdx >= 0 ? `Fase ${phaseIdx + 1}` : (task.phase || 'Fase 1');
+
+      // Tarea estancada (>48h)
+      let staleBadgeHtml = '';
+      if (task.status === 'doing') {
+        const lastActivity = task.updatedAt || Date.now();
+        const diffHours = (Date.now() - lastActivity) / (1000 * 3600);
+        if (diffHours >= 48) {
+          staleBadgeHtml = `
+            <span class="px-2 py-0.5 rounded-lg text-[10px] font-semibold border border-amber-500/40 bg-amber-500/10 text-amber-300 flex items-center gap-1 shadow-sm" title="Tarea estancada: más de 48 horas sin avances en En Progreso">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+              <span>⏳ Estancada (+48h)</span>
+            </span>
+          `;
+        }
+      }
+
+      // Badge de revisión
+      let reviewBadgeHtml = '';
+      if (task.reviewFor === 'sebastian') {
+        reviewBadgeHtml = `
+          <button class="reviewBadgeBtn context-trigger px-2.5 py-0.5 rounded-lg text-[10px] font-bold border border-cyan-400 bg-cyan-950/70 text-cyan-300 flex items-center gap-1.5 shadow-sm hover:opacity-85 transition-opacity" title="Revisión de Sebastián (Clic para alternar)">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>👁️ Sebastián</span>
+          </button>
+        `;
+      } else if (task.reviewFor === 'benjamin') {
+        reviewBadgeHtml = `
+          <button class="reviewBadgeBtn context-trigger px-2.5 py-0.5 rounded-lg text-[10px] font-bold border border-[#FF198F] bg-[#FF198F]/20 text-[#FF198F] flex items-center gap-1.5 shadow-sm hover:opacity-85 transition-opacity" title="Revisión de Benjamín (Clic para alternar)">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#FF198F] animate-pulse"></span>
+            <span>👁️ Benjamín</span>
+          </button>
+        `;
+      } else if (task.reviewFor === 'both') {
+        reviewBadgeHtml = `
+          <button class="reviewBadgeBtn context-trigger px-2.5 py-0.5 rounded-lg text-[10px] font-bold border border-purple-400 bg-purple-950/70 text-purple-300 flex items-center gap-1.5 shadow-sm hover:opacity-85 transition-opacity" title="Revisión de ambos (Clic para alternar)">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            <span>👁️ Ambos</span>
+          </button>
+        `;
+      }
+
+      // Banner de bloqueo sin la palabra "bloqueada"
+      let blockedBannerHtml = '';
+      if (task.isBlocked) {
+        blockedBannerHtml = `
+          <div class="blockerBanner context-trigger mt-2.5 text-xs py-1.5 px-3 rounded-xl border border-rose-500/50 bg-rose-950/40 text-rose-200 flex items-center justify-between gap-2 cursor-pointer hover:border-rose-400 transition-colors" title="Clic para editar o quitar bloqueo">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-sm shrink-0">⚠️</span>
+              <span class="truncate text-xs text-rose-200 font-medium">${escapeHtml(task.blockedReason || 'Dependencia pendiente')}</span>
+            </div>
+            <span class="text-[10px] text-rose-400/80 hover:text-rose-200 shrink-0 font-mono">Editar</span>
+          </div>
+        `;
+      }
+
+      // Fecha límite
+      let deadlineHtml = '';
+      if (task.deadline) {
+        const parts = task.deadline.split('-');
+        let isOverdue = false;
+        let isToday = false;
+        let displayDl = task.deadline;
+
+        if (parts.length === 3) {
+          const dDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (!isNaN(dDate.getTime())) {
+            displayDl = dDate.toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
+            if (task.status !== 'done') {
+              if (dDate < today) isOverdue = true;
+              else if (dDate.getTime() === today.getTime()) isToday = true;
+            }
+          }
+        }
+
+        let dlClass = 'border-slate-700/60 bg-slate-800/40 text-muted-custom';
+        let dlIconColor = 'text-muted-custom';
+        let prefix = 'Vence: ';
+
+        if (isOverdue) {
+          dlClass = 'border-rose-500/50 bg-rose-500/15 text-rose-300 font-semibold';
+          dlIconColor = 'text-rose-400';
+          prefix = '⚠️ Atrasada: ';
+        } else if (isToday) {
+          dlClass = 'border-amber-500/50 bg-amber-500/15 text-amber-300 font-semibold';
+          dlIconColor = 'text-amber-400';
+          prefix = '⏳ Vence Hoy: ';
+        }
+
+        deadlineHtml = `
+          <button class="deadlineBadgeBtn context-trigger px-2.5 py-0.5 rounded-lg text-[10px] font-medium border flex items-center gap-1 ${dlClass} hover:opacity-85 transition-opacity" title="Fecha límite: ${escapeHtml(task.deadline)} (Clic para cambiar)">
+            <svg class="w-2.5 h-2.5 ${dlIconColor}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>${prefix}${escapeHtml(displayDl)}</span>
+          </button>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between gap-2 mb-2.5">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <!-- Puntos visuales para arrastre claro (Drag Dots Handle) -->
+            <div class="drag-handle p-1.5 -ml-1 text-slate-500 hover:text-teal-400 hover:bg-slate-800/70 rounded-lg transition-all cursor-grab active:cursor-grabbing shrink-0 flex items-center justify-center" title="Arrastrar para mover">
+              <svg class="drag-dots w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                <circle cx="7" cy="5" r="1.6" />
+                <circle cx="13" cy="5" r="1.6" />
+                <circle cx="7" cy="10" r="1.6" />
+                <circle cx="13" cy="10" r="1.6" />
+                <circle cx="7" cy="15" r="1.6" />
+                <circle cx="13" cy="15" r="1.6" />
+              </svg>
+            </div>
+
+            <button class="priorityBadgeBtn px-2.5 py-0.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider border ${badgeStyle} cursor-pointer hover:opacity-80 transition-opacity" title="Clic para alternar prioridad">
+              ${priorityText}
+            </button>
+            <button class="effortBadgeBtn px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:border-amber-400 cursor-pointer transition-colors" title="Tamaño: ${effort} (Clic para alternar)">
+              ${effort}
+            </button>
+            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-medium border border-teal-500/30 bg-teal-500/10 text-teal-300" title="${escapeHtml(task.phase || '')}">
+              ${escapeHtml(phaseBadgeText)}
+            </span>
+            ${reviewBadgeHtml}
+            ${deadlineHtml}
+            ${staleBadgeHtml}
+          </div>
+
+          <div class="flex items-center gap-1">
+            <!-- Botón para editar específicamente la parte superior -->
+            <button class="topMetaEditBtn context-trigger p-1.5 rounded-lg text-muted-custom hover:text-teal-300 transition-colors" title="Editar metadatos superiores (prioridad, tamaño, fase, revisión, fecha)">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            </button>
+            <button class="toggleSubtasksBtn p-1.5 rounded-lg text-muted-custom hover:text-teal-400 transition-transform ${isExpanded ? 'rotate-180 text-teal-400' : ''}" title="Expandir / contraer lista de pasos">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Título de Tarea con soporte de doble clic para edición rápida -->
+        <h3 class="cardTitle text-base font-semibold text-slate-100 leading-snug cursor-pointer select-none hover:text-teal-300 transition-colors ${task.status === 'done' ? 'line-through opacity-60' : ''}" title="Doble clic para editar título directamente">
+          ${escapeHtml(task.title)}
+        </h3>
+
+        ${blockedBannerHtml}
+
+        ${hasNotes ? `
+          <div class="openNoteBtn mt-2.5 text-xs text-muted-custom leading-relaxed bg-main/50 p-3 rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors flex items-start gap-2" title="Ver / editar plan de ideas y notas">
+            <span class="text-xs text-amber-400 mt-0.5 shrink-0">💡</span>
+            <span class="line-clamp-2 text-slate-300 text-xs">${escapeHtml(task.notes)}</span>
+          </div>
+        ` : ''}
+
+        <!-- Recurso Entregable -->
+        ${hasLink ? `
+          <div class="mt-2.5 flex items-center gap-1.5">
+            <a href="${escapeHtml(task.link)}" target="_blank" rel="noopener noreferrer" class="resourceLinkAnchor inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-sky-500/30 bg-sky-950/30 text-sky-300 hover:bg-sky-900/40 text-xs font-medium transition-colors" title="Abrir entregable externo (Clic secundario para editar)">
+              <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              <span class="truncate max-w-[220px]">Recurso del entregable</span>
+            </a>
+            <button class="editResourceBtn context-trigger p-1 text-muted-custom hover:text-sky-300 transition-colors" title="Editar enlace directamente">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
+          </div>
+        ` : `
+          <div class="mt-2">
+            <button class="addResourceBtn context-trigger inline-flex items-center gap-1 text-[11px] text-muted-custom hover:text-sky-300 transition-colors">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              <span>+ Agregar recurso / link</span>
+            </button>
+          </div>
+        `}
+
+        ${totalCount > 0 ? `
+          <div class="mt-3 flex items-center gap-2.5">
+            <div class="flex-1 h-1.5 bg-black/40 rounded-full overflow-hidden">
+              <div class="h-full bg-teal-500 transition-all duration-300" style="width: ${(completedCount / totalCount) * 100}%"></div>
+            </div>
+            <span class="text-[11px] text-muted-custom font-mono font-medium">${completedCount}/${totalCount}</span>
+          </div>
+        ` : ''}
+
+        <!-- LISTA DE PASOS CON CARGADOR DE PLANTILLAS -->
+        <div class="subtasksWrapper ${isExpanded ? '' : 'hidden'} mt-3.5 pt-3.5 border-t border-slate-800/80 space-y-2.5">
+          <div class="flex items-center justify-between px-0.5 text-[11px]">
+            <span class="font-medium tracking-wide text-slate-300">Lista de verificación</span>
+            
+            <div class="flex items-center gap-2">
+              <select class="applyTemplateSelect custom-select rounded-lg px-2 py-0.5 text-[10px] outline-none text-muted-custom hover:text-teal-300" title="Cargar pasos predeterminados">
+                <option value="">+ Cargar plantilla...</option>
+                <option value="investigacion">📋 Investigación</option>
+                <option value="web_landing">🌐 Landing / Web</option>
+                <option value="automatizacion_sheets">📊 Auto Sheets</option>
+                <option value="backend_api">🔌 Backend / API</option>
+                <option value="entrega_cliente">🤝 Demo / Entrega</option>
+              </select>
+              <span class="font-mono text-teal-400 font-bold">${totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0}%</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 subtaskList">
+            ${(task.subtasks || []).map(st => `
+              <div class="group flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-800/80 bg-main/60 hover:border-slate-700 transition-colors text-xs" data-st-id="${st.id}">
+                <input 
+                  type="checkbox" 
+                  class="stCheckbox custom-checkbox" 
+                  data-task-id="${task.id}" 
+                  data-st-id="${st.id}" 
+                  ${st.done ? 'checked' : ''}
+                />
+                <span class="stText flex-1 select-text cursor-pointer leading-tight text-slate-200 ${st.done ? 'opacity-40 line-through' : ''}" title="Doble clic para editar texto">
+                  ${escapeHtml(st.text)}
+                </span>
+                <button class="editSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-amber-300 transition-opacity" title="Editar paso">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                </button>
+                <button class="deleteSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-red-400 transition-opacity" title="Eliminar paso">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+            `).join('')}
+          </div>
+
+          <form class="addSubtaskForm flex items-center gap-2 pt-1">
+            <input 
+              type="text" 
+              placeholder="+ Agregar micro-paso... (Enter guarda)" 
+              class="flex-1 rounded-xl px-3 py-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-100" 
+              required
+            />
+            <button type="submit" class="px-3.5 py-2 rounded-xl border text-xs font-medium btn-custom shrink-0">
+              Agregar
+            </button>
+          </form>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN (CON BOTÓN DE PELIGRO ⚠️ PARA BLOQUEO) -->
+        <div class="mt-3.5 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-1">
+          <div class="flex items-center gap-1.5">
+            <!-- Botón de Ideas / Estrategia -->
+            <button class="openNoteBtn p-1.5 rounded-xl border text-xs btn-custom ${hasNotes ? 'text-amber-300 border-amber-500/40' : 'text-muted-custom hover:text-amber-300'}" title="Ver / redactar plan de ideas (💡)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </button>
+
+            <!-- Botón con emoji de peligro (⚠️) para crear o editar bloqueo -->
+            <button class="toggleBlockerBtn context-trigger p-1.5 rounded-xl border text-xs ${task.isBlocked ? 'border-rose-500/60 bg-rose-500/20 text-rose-300' : 'btn-custom text-muted-custom hover:text-rose-400'}" title="${task.isBlocked ? 'Editar o quitar bloqueo existente (⚠️)' : 'Agregar bloqueo / dependencia (⚠️)'}">
+              <span class="text-sm">⚠️</span>
+            </button>
+
+            <!-- Botón de Edición Completa -->
+            <button class="editTaskBtn p-1.5 rounded-xl border text-xs btn-custom text-slate-300 hover:border-teal-500/50" title="Editar tarea completa (todos los campos)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </button>
+
+            <!-- Botón Eliminar -->
+            <button class="deleteBtn p-1.5 rounded-xl text-muted-custom hover:text-red-400 transition-colors" title="Eliminar tarea">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            ${task.status !== 'todo' ? `
+              <button class="moveLeftBtn px-2.5 py-1.5 rounded-xl border text-xs btn-custom" title="Mover a la izquierda">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+            ` : ''}
+            ${task.status !== 'done' ? `
+              <button class="moveRightBtn px-3.5 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 btn-accent">
+                <span>${task.status === 'todo' ? 'En Progreso' : 'Completar'}</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      // Conectar motor físico de arrastre desde los puntos (drag-handle)
+      initPhysicalDrag(card, task);
+
+      // -------------------------------------------------------------
+      // EVENTOS DE EDICIÓN CONTEXTUAL DIRECTA
+      // -------------------------------------------------------------
+
+      // 1. Doble Clic en Título: Edición Inline con Enter para guardar
+      const titleEl = card.querySelector('.cardTitle');
+      titleEl.addEventListener('dblclick', () => {
+        const currentText = task.title;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.className = 'inline-edit-input text-base py-0.5';
+
+        const saveInlineTitle = () => {
+          const val = input.value.trim();
+          if (val && val !== currentText) {
+            task.title = val;
+            task.updatedAt = Date.now();
+            saveTasks(true);
+            recordActivity(`Título editado a "${val}"`);
+            showToast('Título actualizado');
+          } else {
+            renderBoard();
+          }
+        };
+
+        input.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            saveInlineTitle();
+          } else if (ev.key === 'Escape') {
+            renderBoard();
+          }
+        });
+        input.addEventListener('blur', saveInlineTitle);
+
+        titleEl.replaceWith(input);
+        input.focus();
+        input.select();
+      });
+
+      // 2. Alternar Prioridad con 1 Clic
+      card.querySelector('.priorityBadgeBtn').addEventListener('click', () => {
+        const order = ['normal', 'high', 'low'];
+        const currentIdx = order.indexOf((task.priority || 'normal').toLowerCase());
+        task.priority = order[(currentIdx + 1) % order.length];
+        task.updatedAt = Date.now();
+        saveTasks(true);
+        showToast(`Prioridad: ${task.priority.toUpperCase()}`);
+      });
+
+      // 3. Alternar Tamaño (XS, S, M, L) con 1 Clic
+      card.querySelector('.effortBadgeBtn').addEventListener('click', () => {
+        const efforts = ['XS', 'S', 'M', 'L'];
+        const currentIdx = efforts.indexOf(task.effort || 'S');
+        task.effort = efforts[(currentIdx + 1) % efforts.length];
+        task.updatedAt = Date.now();
+        saveTasks(true);
+        showToast(`Tamaño: ${task.effort}`);
+      });
+
+      // 4. Botón de Edición Específica de Metadatos Superiores
+      const topMetaEditBtn = card.querySelector('.topMetaEditBtn');
+      topMetaEditBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        activeContextTaskId = task.id;
+        const phaseOptions = phases.map(p => 
+          `<option value="${escapeHtml(p)}" ${task.phase === p ? 'selected' : ''}>${escapeHtml(p)}</option>`
+        ).join('');
+
+        const bodyHtml = `
+          <div class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Prioridad</label>
+                <select id="ctxMetaPriority" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+                  <option value="normal" ${task.priority === 'normal' ? 'selected' : ''}>🟡 Normal</option>
+                  <option value="high" ${task.priority === 'high' ? 'selected' : ''}>🔴 Alta</option>
+                  <option value="low" ${task.priority === 'low' ? 'selected' : ''}>🟢 Baja</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Tamaño</label>
+                <select id="ctxMetaEffort" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none font-mono text-amber-300 font-bold">
+                  <option value="XS" ${task.effort === 'XS' ? 'selected' : ''}>XS</option>
+                  <option value="S" ${task.effort === 'S' ? 'selected' : ''}>S</option>
+                  <option value="M" ${task.effort === 'M' ? 'selected' : ''}>M</option>
+                  <option value="L" ${task.effort === 'L' ? 'selected' : ''}>L</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Fase</label>
+              <select id="ctxMetaPhase" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+                ${phaseOptions}
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Revisión</label>
+                <select id="ctxMetaReview" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+                  <option value="none" ${task.reviewFor === 'none' ? 'selected' : ''}>Sin revisión</option>
+                  <option value="sebastian" ${task.reviewFor === 'sebastian' ? 'selected' : ''}>👁️ Sebastián</option>
+                  <option value="benjamin" ${task.reviewFor === 'benjamin' ? 'selected' : ''}>👁️ Benjamín</option>
+                  <option value="both" ${task.reviewFor === 'both' ? 'selected' : ''}>👁️ Ambos</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Fecha Límite</label>
+                <input type="date" id="ctxMetaDeadline" value="${task.deadline || ''}" class="w-full rounded-xl p-1.5 text-xs border border-slate-700 bg-main outline-none text-slate-200" />
+              </div>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-[10px] text-muted-custom">Enter guarda cambios</span>
+              <button id="ctxSaveMetaBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold btn-accent">Guardar (Enter)</button>
+            </div>
+          </div>
+        `;
+        openContextPopover('Metadatos Superiores', bodyHtml, topMetaEditBtn);
+
+        const saveTopMeta = () => {
+          task.priority = document.getElementById('ctxMetaPriority').value;
+          task.effort = document.getElementById('ctxMetaEffort').value;
+          task.phase = document.getElementById('ctxMetaPhase').value;
+          task.reviewFor = document.getElementById('ctxMetaReview').value;
+          task.deadline = document.getElementById('ctxMetaDeadline').value;
+          task.updatedAt = Date.now();
+          saveTasks(true);
+          recordActivity(`Modificó metadatos en "${task.title}"`);
+          closeContextPopover();
+          showToast('Metadatos actualizados');
+        };
+
+        document.getElementById('ctxSaveMetaBtn').addEventListener('click', saveTopMeta);
+        
+        contextEditPopover.querySelectorAll('input, select').forEach(el => {
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              saveTopMeta();
+            }
+          });
+        });
+      });
+
+      // 5. Botón de Bloqueo / Dependencia Inferior (⚠️) y Clic en Banner
+      const openBlockerEdit = (ev, triggerEl) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        activeContextTaskId = task.id;
+        const isCurrentlyBlocked = Boolean(task.isBlocked);
+        const bodyHtml = `
+          <div class="space-y-2.5">
+            <label class="block text-[10px] uppercase font-semibold text-rose-300">Motivo del bloqueo o dependencia:</label>
+            <textarea id="contextBlockedInput" rows="2" placeholder="Escribe el motivo del bloqueo... (Presiona Enter para guardar)" class="w-full rounded-xl p-2.5 text-xs border border-slate-700 outline-none bg-main text-slate-100 focus:border-rose-500">${escapeHtml(task.blockedReason || '')}</textarea>
+            <div class="flex items-center justify-between pt-1">
+              ${isCurrentlyBlocked ? `
+                <button id="contextUnblockBtn" class="text-xs text-teal-400 hover:underline font-semibold">Desbloquear tarea</button>
+                <button id="contextSaveBlockBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold btn-accent">Guardar (Enter)</button>
+              ` : `
+                <span></span>
+                <button id="contextSaveBlockBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white">Bloquear Tarea (Enter)</button>
+              `}
+            </div>
+          </div>
+        `;
+        openContextPopover(isCurrentlyBlocked ? 'Editar Bloqueo ⚠️' : 'Crear Bloqueo ⚠️', bodyHtml, triggerEl);
+
+        const saveBlocker = () => {
+          const val = document.getElementById('contextBlockedInput').value.trim();
+          task.blockedReason = val;
+          task.isBlocked = true;
+          task.updatedAt = Date.now();
+          saveTasks(true);
+          recordActivity(`Marcó bloqueo en "${task.title}" (${val || 'sin motivo'})`);
+          closeContextPopover();
+          showToast('Bloqueo registrado ⚠️');
+        };
+
+        document.getElementById('contextSaveBlockBtn').addEventListener('click', saveBlocker);
+        
+        const txtInput = document.getElementById('contextBlockedInput');
+        txtInput.focus();
+        txtInput.select();
+        txtInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            saveBlocker();
+          }
+        });
+
+        const unblockBtn = document.getElementById('contextUnblockBtn');
+        if (unblockBtn) {
+          unblockBtn.addEventListener('click', () => {
+            task.isBlocked = false;
+            task.blockedReason = '';
+            task.updatedAt = Date.now();
+            saveTasks(true);
+            recordActivity(`Desbloqueó tarea "${task.title}"`);
+            closeContextPopover();
+            showToast('Tarea desbloqueada');
+          });
+        }
+      };
+
+      const toggleBlockerBtn = card.querySelector('.toggleBlockerBtn');
+      if (toggleBlockerBtn) {
+        toggleBlockerBtn.addEventListener('click', (e) => openBlockerEdit(e, toggleBlockerBtn));
+      }
+      const blockerBanner = card.querySelector('.blockerBanner');
+      if (blockerBanner) {
+        blockerBanner.addEventListener('click', (e) => openBlockerEdit(e, blockerBanner));
+      }
+
+      // 6. Edición de Recurso / Enlace
+      const openResourceEdit = (ev, triggerEl) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        activeContextTaskId = task.id;
+        const bodyHtml = `
+          <div class="space-y-2">
+            <input type="url" id="contextLinkInput" value="${escapeHtml(task.link || '')}" placeholder="https://drive.google.com/... (Enter guarda)" class="w-full rounded-xl p-2 text-xs border border-slate-700 outline-none bg-main text-slate-100" />
+            <div class="flex items-center justify-between pt-1">
+              <button id="contextDeleteLinkBtn" class="text-[11px] text-rose-400 hover:underline">Quitar enlace</button>
+              <button id="contextSaveLinkBtn" class="px-3 py-1 rounded-lg text-xs font-medium btn-accent">Guardar (Enter)</button>
+            </div>
+          </div>
+        `;
+        openContextPopover('Enlace del Entregable', bodyHtml, triggerEl);
+
+        const saveResource = () => {
+          const val = document.getElementById('contextLinkInput').value.trim();
+          task.link = val;
+          task.updatedAt = Date.now();
+          saveTasks(true);
+          recordActivity(`Actualizó enlace de "${task.title}"`);
+          closeContextPopover();
+          showToast('Enlace guardado');
+        };
+
+        document.getElementById('contextSaveLinkBtn').addEventListener('click', saveResource);
+        
+        const linkInp = document.getElementById('contextLinkInput');
+        linkInp.focus();
+        linkInp.select();
+        linkInp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            saveResource();
+          }
+        });
+
+        document.getElementById('contextDeleteLinkBtn').addEventListener('click', () => {
+          task.link = '';
+          task.updatedAt = Date.now();
+          saveTasks(true);
+          closeContextPopover();
+          showToast('Enlace eliminado');
+        });
+      };
+
+      const resAnchor = card.querySelector('.resourceLinkAnchor');
+      if (resAnchor) {
+        resAnchor.addEventListener('contextmenu', (e) => openResourceEdit(e, resAnchor));
+      }
+      const editResBtn = card.querySelector('.editResourceBtn');
+      if (editResBtn) {
+        editResBtn.addEventListener('click', (e) => openResourceEdit(e, editResBtn));
+      }
+      const addResBtn = card.querySelector('.addResourceBtn');
+      if (addResBtn) {
+        addResBtn.addEventListener('click', (e) => openResourceEdit(e, addResBtn));
+      }
+
+      // 7. Edición de Fecha Límite Rápida
+      const dlBadgeBtn = card.querySelector('.deadlineBadgeBtn');
+      if (dlBadgeBtn) {
+        dlBadgeBtn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          activeContextTaskId = task.id;
+          const bodyHtml = `
+            <div class="space-y-2">
+              <input type="date" id="contextDeadlineInput" value="${task.deadline || ''}" class="w-full rounded-xl p-2 text-xs border border-slate-700 outline-none bg-main text-slate-100 cursor-pointer" />
+              <div class="flex items-center justify-between pt-1">
+                <button id="contextClearDeadlineBtn" class="text-[11px] text-rose-400 hover:underline">Sin fecha</button>
+                <button id="contextSaveDeadlineBtn" class="px-3 py-1 rounded-lg text-xs font-medium btn-accent">Guardar (Enter)</button>
+              </div>
+            </div>
+          `;
+          openContextPopover('Fecha Límite', bodyHtml, dlBadgeBtn);
+
+          const saveDeadline = () => {
+            const val = document.getElementById('contextDeadlineInput').value;
+            task.deadline = val;
+            task.updatedAt = Date.now();
+            saveTasks(true);
+            recordActivity(`Fecha límite cambiada en "${task.title}"`);
+            closeContextPopover();
+            showToast('Fecha límite actualizada');
+          };
+
+          document.getElementById('contextSaveDeadlineBtn').addEventListener('click', saveDeadline);
+          const dlInp = document.getElementById('contextDeadlineInput');
+          dlInp.focus();
+          dlInp.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              saveDeadline();
+            }
+          });
+
+          document.getElementById('contextClearDeadlineBtn').addEventListener('click', () => {
+            task.deadline = '';
+            task.updatedAt = Date.now();
+            saveTasks(true);
+            closeContextPopover();
+            showToast('Fecha límite eliminada');
+          });
+        });
+      }
+
+      // 8. Alternar Revisión con Clic en el Badge
+      const reviewBadge = card.querySelector('.reviewBadgeBtn');
+      if (reviewBadge) {
+        reviewBadge.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          const reviewOrder = ['none', 'sebastian', 'benjamin', 'both'];
+          const currentIdx = reviewOrder.indexOf(task.reviewFor || 'none');
+          task.reviewFor = reviewOrder[(currentIdx + 1) % reviewOrder.length];
+          task.updatedAt = Date.now();
+          saveTasks(true);
+          const who = task.reviewFor === 'sebastian' ? 'Sebastián' : task.reviewFor === 'benjamin' ? 'Benjamín' : task.reviewFor === 'both' ? 'Ambos' : 'Ninguno';
+          showToast(`Revisión: ${who}`);
+        });
+      }
+
+      // 9. Cargar Plantillas de Checklist Directamente
+      const templateSelect = card.querySelector('.applyTemplateSelect');
+      templateSelect.addEventListener('change', (e) => {
+        const key = e.target.value;
+        if (!key || !CHECKLIST_TEMPLATES[key]) return;
+        const tmpl = CHECKLIST_TEMPLATES[key];
+        task.subtasks = task.subtasks || [];
+        tmpl.steps.forEach(stText => {
+          task.subtasks.push({
+            id: `pst-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+            text: stText,
+            done: false
+          });
+        });
+        task.updatedAt = Date.now();
+        openSubtasksTaskIds.add(task.id);
+        saveTasks(true);
+        recordActivity(`Cargó plantilla "${tmpl.name}" en "${task.title}"`);
+        showToast(`Plantilla "${tmpl.name}" agregada`);
+      });
+
+      // Expandir / contraer checklist
+      const toggleSubtasks = () => {
+        if (openSubtasksTaskIds.has(task.id)) {
+          openSubtasksTaskIds.delete(task.id);
+        } else {
+          openSubtasksTaskIds.add(task.id);
+        }
+        renderBoard();
+      };
+      card.querySelector('.toggleSubtasksBtn').addEventListener('click', toggleSubtasks);
+
+      // Abrir popover de notas
+      card.querySelectorAll('.openNoteBtn').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          openNotePopover(task, btn);
+        });
+      });
+
+      // Botón de edición completa
+      card.querySelector('.editTaskBtn').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        openEditModal(task);
+      });
+
+      // Checkboxes de sub-pasos
+      card.querySelectorAll('.stCheckbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const stId = e.target.getAttribute('data-st-id');
+          const st = (task.subtasks || []).find(s => s.id === stId);
+          if (st) st.done = e.target.checked;
+          task.updatedAt = Date.now();
+          openSubtasksTaskIds.add(task.id);
+          saveTasks(true);
+        });
+      });
+
+      // Edición inline de micro-pasos
+      card.querySelectorAll('.subtaskList > div').forEach(row => {
+        const stId = row.getAttribute('data-st-id');
+        const st = (task.subtasks || []).find(s => s.id === stId);
+        if (!st) return;
+
+        const textSpan = row.querySelector('.stText');
+        const editBtn = row.querySelector('.editSubtaskBtn');
+        const deleteBtn = row.querySelector('.deleteSubtaskBtn');
+
+        const triggerInlineEdit = () => {
+          const currentText = st.text;
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = currentText;
+          input.className = 'flex-1 rounded-lg px-2 py-0.5 text-xs border outline-none bg-main border-teal-500 text-slate-100';
+
+          const saveInline = () => {
+            const val = input.value.trim();
+            if (val) {
+              st.text = val;
+              task.updatedAt = Date.now();
+            }
+            openSubtasksTaskIds.add(task.id);
+            saveTasks(true);
+          };
+
+          input.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') {
+              ev.preventDefault();
+              saveInline();
+            } else if (ev.key === 'Escape') {
+              renderBoard();
+            }
+          });
+          input.addEventListener('blur', saveInline);
+
+          textSpan.replaceWith(input);
+          input.focus();
+          input.select();
+        };
+
+        textSpan.addEventListener('dblclick', triggerInlineEdit);
+        editBtn.addEventListener('click', triggerInlineEdit);
+
+        deleteBtn.addEventListener('click', () => {
+          task.subtasks = (task.subtasks || []).filter(s => s.id !== stId);
+          task.updatedAt = Date.now();
+          openSubtasksTaskIds.add(task.id);
+          saveTasks(true);
+          showToast('Paso eliminado');
+        });
+      });
+
+      // Agregar micro-paso manual
+      const addStForm = card.querySelector('.addSubtaskForm');
+      addStForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = addStForm.querySelector('input');
+        const text = input.value.trim();
+        if (!text) return;
+        task.subtasks = task.subtasks || [];
+        task.subtasks.push({
+          id: `pst-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+          text: text,
+          done: false
+        });
+        task.updatedAt = Date.now();
+        openSubtasksTaskIds.add(task.id);
+        saveTasks(true);
+      });
+
+      // Eliminar tarea
+      card.querySelector('.deleteBtn').addEventListener('click', () => {
+        openSubtasksTaskIds.delete(task.id);
+        if (activeNoteTaskId === task.id) closeNotePopover();
+        if (activeContextTaskId === task.id) closeContextPopover();
+        recordActivity(`Eliminó tarea "${task.title}"`);
+        tasks = tasks.filter(t => t.id !== task.id);
+        saveTasks(true);
+        showToast('Tarea eliminada');
+      });
+
+      // Movimiento manual entre columnas
+      const moveLeft = card.querySelector('.moveLeftBtn');
+      if (moveLeft) {
+        moveLeft.addEventListener('click', () => {
+          const oldStatus = task.status;
+          task.status = task.status === 'done' ? 'doing' : 'todo';
+          task.updatedAt = Date.now();
+          recordActivity(`Movió "${task.title}" a ${task.status === 'doing' ? 'En Progreso' : 'Por Hacer'}`);
+          saveTasks(true);
+        });
+      }
+
+      const moveRight = card.querySelector('.moveRightBtn');
+      if (moveRight) {
+        moveRight.addEventListener('click', () => {
+          const wasDone = task.status === 'done';
+          task.status = task.status === 'todo' ? 'doing' : 'done';
+          task.updatedAt = Date.now();
+          if (task.status === 'done' && !wasDone) {
+            notifyDiscordTaskCompleted(task);
+            recordActivity(`Completó entregable "${task.title}"`);
+          } else {
+            recordActivity(`Movió "${task.title}" a En Progreso`);
+          }
+          saveTasks(true);
+        });
+      }
+
+      return card;
+    }
+
+    // =========================================================================
+    // MOTOR FÍSICO DE ARRASTRE DE ALTA ALTITUD (CERO LAG, 60/240 FPS)
+    // =========================================================================
+    let activeDrag = null;
+
+    function initPhysicalDrag(card, task) {
+      const handle = card.querySelector('.drag-handle');
+      if (!handle) return;
+
+      handle.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const rect = card.getBoundingClientRect();
+
+        // Crear el hueco del tamaño exacto donde estaba la tarjeta
+        const placeholder = document.createElement('div');
+        placeholder.className = 'drag-slot-placeholder';
+        placeholder.style.height = `${rect.height}px`;
+
+        card.parentNode.insertBefore(placeholder, card);
+
+        // Desacoplar la tarjeta hacia la capa superior de la ventana
+        document.body.appendChild(card);
+        card.style.width = `${rect.width}px`;
+        card.style.height = `${rect.height}px`;
+        card.classList.add('kanban-card-floating');
+
+        // Posicionar exactamente bajo el cursor con efecto de elevación (scale + tilt)
+        card.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0) scale(1.04) rotate(1.5deg)`;
+
+        activeDrag = {
+          card,
+          task,
+          placeholder,
+          offsetX: e.clientX - rect.left,
+          offsetY: e.clientY - rect.top,
+          currentX: e.clientX,
+          currentY: e.clientY,
+          rafId: null
+        };
+
+        document.addEventListener('pointermove', onPhysicalDragMove, { passive: true });
+        document.addEventListener('pointerup', onPhysicalDragEnd);
+        document.addEventListener('pointercancel', onPhysicalDragEnd);
+      });
+    }
+
+    function onPhysicalDragMove(e) {
+      if (!activeDrag) return;
+      activeDrag.currentX = e.clientX;
+      activeDrag.currentY = e.clientY;
+
+      if (!activeDrag.rafId) {
+        activeDrag.rafId = requestAnimationFrame(updatePhysicalDragFrame);
+      }
+    }
+
+    function updatePhysicalDragFrame() {
+      if (!activeDrag) return;
+      activeDrag.rafId = null;
+
+      const { card, placeholder, currentX, currentY, offsetX, offsetY } = activeDrag;
+      const x = currentX - offsetX;
+      const y = currentY - offsetY;
+
+      // Movimiento directo por GPU sin recalcular el DOM
+      card.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.04) rotate(1.5deg)`;
+
+      // Detectar sobre qué columna está volando el cursor
+      const elementBelow = document.elementFromPoint(currentX, currentY);
+      if (!elementBelow) return;
+
+      const dropzone = elementBelow.closest('.cards-dropzone');
+      if (dropzone) {
+        const afterElement = getCardAfterCursor(dropzone, currentY);
+        if (afterElement == null) {
+          if (dropzone.lastElementChild !== placeholder) {
+            dropzone.appendChild(placeholder);
+          }
+        } else if (afterElement !== placeholder && afterElement.previousElementSibling !== placeholder) {
+          dropzone.insertBefore(placeholder, afterElement);
+        }
+      }
+    }
+
+    function getCardAfterCursor(container, y) {
+      const staticCards = [...container.querySelectorAll('.kanban-card:not(.kanban-card-floating)')];
+      return staticCards.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: child };
+        }
+        return closest;
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function onPhysicalDragEnd() {
+      if (!activeDrag) return;
+      if (activeDrag.rafId) cancelAnimationFrame(activeDrag.rafId);
+
+      document.removeEventListener('pointermove', onPhysicalDragMove);
+      document.removeEventListener('pointerup', onPhysicalDragEnd);
+      document.removeEventListener('pointercancel', onPhysicalDragEnd);
+
+      const { card, task, placeholder } = activeDrag;
+      activeDrag = null;
+
+      // Animar el aterrizaje suave hacia el hueco (o regreso a su origen)
+      const targetRect = placeholder.getBoundingClientRect();
+      card.classList.add('kanban-card-settling');
+      card.style.transform = `translate3d(${targetRect.left}px, ${targetRect.top}px, 0) scale(1) rotate(0deg)`;
+
+      setTimeout(() => {
+        const parentZone = placeholder.closest('.cards-dropzone');
+        if (parentZone) {
+          const newStatus = parentZone.getAttribute('data-status');
+          const wasDone = task.status === 'done';
+
+          // Calcular el nuevo orden exacto en el arreglo de tareas
+          const nextCard = placeholder.nextElementSibling;
+          const oldIdx = tasks.findIndex(t => t.id === task.id);
+          if (oldIdx !== -1) tasks.splice(oldIdx, 1);
+
+          if (nextCard && nextCard.hasAttribute('data-id')) {
+            const nextId = nextCard.getAttribute('data-id');
+            const targetIdx = tasks.findIndex(t => t.id === nextId);
+            if (targetIdx !== -1) tasks.splice(targetIdx, 0, task);
+            else tasks.push(task);
+          } else {
+            tasks.push(task);
+          }
+
+          if (newStatus && task.status !== newStatus) {
+            task.status = newStatus;
+            task.updatedAt = Date.now();
+            const statusNames = { todo: 'Por Hacer', doing: 'En Progreso', done: 'Completadas' };
+            recordActivity(`Movió "${task.title}" a ${statusNames[newStatus] || newStatus}`);
+            if (newStatus === 'done' && !wasDone) {
+              notifyDiscordTaskCompleted(task);
+            }
+            showToast(`Movido a ${statusNames[newStatus]}`);
+          } else {
+            task.updatedAt = Date.now();
+          }
+        }
+
+        // Limpiar nodo flotante y renderizar tablero limpio
+        if (card.parentNode) card.parentNode.removeChild(card);
+        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+        saveTasks(true);
+      }, 220);
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+    }
+
+    // FORMULARIO DE AGREGADO RÁPIDO
+    document.getElementById('quickAddForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const titleInput = document.getElementById('taskTitleInput');
+      const colSelect = document.getElementById('taskColSelect');
+      const prioSelect = document.getElementById('taskPrioritySelect');
+      const effortSelect = document.getElementById('taskEffortSelect');
+      const phaseSelect = document.getElementById('taskPhaseSelect');
+      const reviewSelect = document.getElementById('taskReviewSelect');
+      const deadlineInput = document.getElementById('taskDeadlineInput');
+      const title = titleInput.value.trim();
+      if (!title) return;
+
+      const newTask = {
+        id: `pt-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        title,
+        status: colSelect.value,
+        priority: prioSelect.value,
+        effort: effortSelect.value || 'S',
+        phase: phaseSelect.value || phases[0],
+        reviewFor: reviewSelect.value || 'none',
+        date: new Date().toLocaleDateString('es-CL'),
+        deadline: deadlineInput.value.trim() || '',
+        link: '',
+        isBlocked: false,
+        blockedReason: '',
+        notes: '',
+        updatedAt: Date.now(),
+        subtasks: []
+      };
+
+      tasks.unshift(newTask);
+      titleInput.value = '';
+      deadlineInput.value = '';
+      recordActivity(`Creó entregable "${title}" (${phaseSelect.value})`);
+      saveTasks(true);
+      showToast('Tarea agregada');
+    });
+
+    document.querySelectorAll('.closeModalBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        editTaskModal.classList.add('hidden');
+        phaseManagerModal.classList.add('hidden');
+      });
+    });
+
+    [editTaskModal, phaseManagerModal].forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+    });
+
+    // INICIALIZACIÓN
+    updateActiveUserUI();
+    renderPhasesUI();
+    renderActivityLog();
+    renderBoard();
+
+    // Sincronización continua en segundo plano (cada 10 segundos)
+    if (BACKEND_SYNC_URL) {
+      fetchRemoteTasks();
+      setInterval(fetchRemoteTasks, 10000);
+    } else {
+      document.getElementById('syncIndicator').classList.add('opacity-40');
+      document.getElementById('syncText').textContent = 'Modo Local';
+    }
+  </script>
+</body>
+</html>
