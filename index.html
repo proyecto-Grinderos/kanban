@@ -227,7 +227,7 @@
         <div class="w-3 h-3 rounded-full bg-teal-500 shadow-sm shadow-teal-500/50"></div>
         <div>
           <h1 class="font-semibold tracking-tight text-base sm:text-lg text-slate-100">Kanban Proyecto</h1>
-          <p class="text-[11px] text-muted-custom hidden sm:block">Proyecto Grinderos y su cogida</p>
+          <p class="text-[11px] text-muted-custom hidden sm:block">Proyecto Grinderos y su cojida</p>
         </div>
       </div>
       
@@ -1279,12 +1279,17 @@
     }
 
     // =========================================================================
-    // AUTO-SINCRONIZACIÓN EN TIEMPO REAL (PUSH CONTINUO Y POLLING RÁPIDO)
+    // AUTO-SINCRONIZACIÓN EN TIEMPO REAL (SIN TAREAS ZOMBIE + HISTORIAL COMPARTIDO)
     // =========================================================================
     async function fetchRemoteTasks() {
       if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) {
         document.getElementById('syncIndicator').classList.add('opacity-40');
         document.getElementById('syncText').textContent = 'Modo Local';
+        return;
+      }
+
+      // No interrumpir si el usuario está arrastrando o escribiendo en un popover/modal
+      if (activeDrag || activeNoteTaskId || activeContextTaskId || !document.getElementById('editTaskModal').classList.contains('hidden')) {
         return;
       }
 
@@ -1295,54 +1300,30 @@
         const res = await fetch(BACKEND_SYNC_URL, { method: 'GET', mode: 'cors' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+
         const remoteTasks = Array.isArray(data) ? data : (data.tasks || []);
+        const remoteLog = Array.isArray(data.activityLog) ? data.activityLog : null;
 
-        if (Array.isArray(remoteTasks) && remoteTasks.length > 0) {
-          let updatedAny = false;
-          remoteTasks.forEach(rt => {
-            const rawTitle = (rt.title || '').trim();
-            if (!rawTitle) return;
-            const normKey = rawTitle.toLowerCase();
-            const existing = tasks.find(t => (t.title || '').trim().toLowerCase() === normKey);
+        // 1. Sincronización de tareas exacta: elimina las tareas borradas remotamente
+        if (Array.isArray(remoteTasks)) {
+          const localJson = JSON.stringify(tasks);
+          const remoteJson = JSON.stringify(remoteTasks);
+          if (localJson !== remoteJson) {
+            tasks = remoteTasks;
+            saveTasks(false); // Guarda localmente y re-renderiza sin reenviar al servidor
+          }
+        }
 
-            if (!existing) {
-              tasks.push({
-                id: rt.id || `remote-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-                title: rawTitle,
-                status: (rt.status || 'todo').toLowerCase(),
-                priority: (rt.priority || 'normal').toLowerCase(),
-                effort: rt.effort || 'S',
-                phase: rt.phase || phases[0],
-                date: rt.date || new Date().toLocaleDateString('es-CL'),
-                deadline: rt.deadline || '',
-                reviewFor: rt.reviewFor || 'none',
-                link: rt.link || '',
-                isBlocked: Boolean(rt.isBlocked),
-                blockedReason: rt.blockedReason || '',
-                notes: rt.notes || '',
-                updatedAt: rt.updatedAt || Date.now(),
-                subtasks: Array.isArray(rt.subtasks) ? rt.subtasks : []
-              });
-              updatedAny = true;
-            } else if (rt.updatedAt && (!existing.updatedAt || rt.updatedAt > existing.updatedAt)) {
-              existing.status = (rt.status || existing.status).toLowerCase();
-              existing.priority = rt.priority || existing.priority;
-              existing.effort = rt.effort || existing.effort;
-              existing.phase = rt.phase || existing.phase;
-              existing.reviewFor = rt.reviewFor || existing.reviewFor;
-              existing.link = rt.link !== undefined ? rt.link : existing.link;
-              existing.isBlocked = rt.isBlocked !== undefined ? Boolean(rt.isBlocked) : existing.isBlocked;
-              existing.blockedReason = rt.blockedReason || existing.blockedReason;
-              existing.notes = rt.notes !== undefined ? rt.notes : existing.notes;
-              existing.deadline = rt.deadline !== undefined ? rt.deadline : existing.deadline;
-              existing.updatedAt = rt.updatedAt;
-              if (Array.isArray(rt.subtasks)) existing.subtasks = rt.subtasks;
-              updatedAny = true;
-            }
-          });
-
-          if (updatedAny) {
-            saveTasks(false);
+        // 2. Sincronización del historial compartido entre ambos compañeros
+        if (remoteLog && Array.isArray(remoteLog)) {
+          const localLogJson = JSON.stringify(activityLog);
+          const remoteLogJson = JSON.stringify(remoteLog);
+          if (localLogJson !== remoteLogJson) {
+            activityLog = remoteLog;
+            try {
+              localStorage.setItem(ACTIVITY_STORAGE_KEY, remoteLogJson);
+            } catch(e) {}
+            renderActivityLog();
           }
         }
 
@@ -1355,6 +1336,25 @@
       }
     }
 
+    async function pushTasksToRemote() {
+      if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com/macros/s/AKfycbz-MZm9WsguuQCI3yxGARUzsHrfHclgvDt8C5Pn2NcPgMq-T17ZtrO2peiZaItua4nqWg/exec')) return;
+      try {
+        await fetch(BACKEND_SYNC_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'push_update',
+            user: activeUser,
+            tasks: tasks,
+            activityLog: activityLog,
+            timestamp: Date.now()
+          })
+        });
+      } catch(err) {
+        console.warn('Fallo al emitir actualización inmediata:', err);
+      }
+    }
     async function pushTasksToRemote() {
       if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) return;
       try {
