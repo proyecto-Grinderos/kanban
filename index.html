@@ -91,6 +91,54 @@
       transform: scale(1);
     }
 
+    /* SLIDER TÁCTIL DE PROGRESO DE SUBTAREA */
+    .st-fader-track {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      cursor: pointer;
+      touch-action: none;
+      flex: 1;
+    }
+    .st-fader-track:hover {
+      border-color: rgba(20, 184, 166, 0.55);
+    }
+    .st-fader-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%);
+      transition: width 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+    .st-fader-thumb {
+      position: absolute;
+      top: 50%;
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      background-color: #f8fafc;
+      border: 2px solid #14b8a6;
+      transform: translate(-50%, -50%) scale(1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.65);
+      transition: left 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.15s ease, box-shadow 0.15s ease;
+      pointer-events: none;
+    }
+    .st-fader-track:hover .st-fader-thumb {
+      transform: translate(-50%, -50%) scale(1.12);
+    }
+    .st-fader-track.fader-dragging .st-fader-fill,
+    .st-fader-track.fader-dragging .st-fader-thumb {
+      transition: none !important;
+    }
+    .st-fader-track.fader-dragging .st-fader-thumb {
+      transform: translate(-50%, -50%) scale(1.28);
+      background-color: #2dd4bf;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.3), 0 4px 10px rgba(0, 0, 0, 0.8);
+    }
+
     /* MENÚS DESPLEGABLES ATRACTIVOS (CUSTOM SELECT) */
     .custom-select {
       appearance: none;
@@ -129,7 +177,7 @@
       backdrop-filter: blur(14px);
     }
 
-    /* MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA (MÁS AMPLIO) */
+    /* MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA (AMPLIADO) */
     #contextEditPopover {
       box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.3);
       backdrop-filter: blur(14px);
@@ -220,12 +268,12 @@
 
   <!-- ENCABEZADO EXPANDIDO CON SELECTOR DE PERFIL ACTIVO (BENJAMÍN / SEBASTIÁN) -->
   <header class="border-b border-slate-800/80 bg-surf px-4 sm:px-8 xl:px-12 py-3.5">
-    <div class="max-w-[1720px] w-full mx-auto flex items-center justify-between">
+    <div class="max-w-[1800px] w-full mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-3 h-3 rounded-full bg-teal-500 shadow-sm shadow-teal-500/50"></div>
         <div>
           <h1 class="font-semibold tracking-tight text-base sm:text-lg text-slate-100">Kanban Proyecto</h1>
-          <p class="text-[11px] text-muted-custom hidden sm:block">Proyecto Grinderos y su cogida</p>
+          <p class="text-[11px] text-muted-custom hidden sm:block">Proyecto Grinderos y su cojida</p>
         </div>
       </div>
       
@@ -256,8 +304,8 @@
     </div>
   </header>
 
-  <!-- BARRA DE ENTRADA RÁPIDA DE TAREAS (PLACEHOLDER LIMPIO) -->
-  <section class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 pt-5 pb-2">
+  <!-- BARRA DE ENTRADA RÁPIDA DE TAREAS -->
+  <section class="max-w-[1800px] w-full mx-auto px-4 sm:px-8 xl:px-12 pt-5 pb-2">
     <form id="quickAddForm" class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 bg-surf/60 p-2 sm:p-2.5 rounded-2xl border border-slate-800">
       <div class="relative flex-1">
         <input 
@@ -271,12 +319,9 @@
 
       <!-- Barra de Parámetros de Entrada Rápida -->
       <div class="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
-        <!-- Selector Compacto de Fase ('Fase X') -->
         <select id="taskPhaseSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-semibold outline-none shrink-0" title="Seleccionar Fase del entregable">
-          <!-- Opciones inyectadas dinámicamente -->
         </select>
 
-        <!-- Selector de Tamaño / Esfuerzo (Solo XS, S, M, L) -->
         <select id="taskEffortSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-mono font-bold outline-none shrink-0 text-amber-300" title="Tamaño de la tarea">
           <option value="XS">XS</option>
           <option value="S" selected>S</option>
@@ -284,7 +329,6 @@
           <option value="L">L</option>
         </select>
 
-        <!-- Selector de Revisión con Colores -->
         <select id="taskReviewSelect" class="custom-select rounded-xl px-3 py-2 text-xs font-medium outline-none shrink-0" title="Pedir revisión a un compañero">
           <option value="none">Sin revisión</option>
           <option value="sebastian">👁️ Sebastián (Cyan)</option>
@@ -292,7 +336,6 @@
           <option value="both">👁️ Ambos compañeros</option>
         </select>
 
-        <!-- Selector de Fecha Límite -->
         <div class="flex items-center border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs bg-[#161b22] shrink-0 gap-1.5 shadow-sm" title="Fecha límite opcional">
           <span class="text-xs text-muted-custom">⏳</span>
           <input 
@@ -302,14 +345,12 @@
           />
         </div>
 
-        <!-- Selector de Prioridad -->
         <select id="taskPrioritySelect" class="custom-select rounded-xl px-3 py-2 text-xs outline-none shrink-0 font-medium">
           <option value="normal">🟡 Normal</option>
           <option value="high">🔴 Alta</option>
           <option value="low">🟢 Baja</option>
         </select>
 
-        <!-- Columna de Destino -->
         <select id="taskColSelect" class="custom-select rounded-xl px-3 py-2 text-xs outline-none shrink-0 font-medium">
           <option value="todo">Por Hacer</option>
           <option value="doing">En Progreso</option>
@@ -325,10 +366,9 @@
   </section>
 
   <!-- BARRA DE FILTROS DE FASE, REVISIÓN RÁPIDA Y GESTOR DE FASES -->
-  <section class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-2.5">
+  <section class="max-w-[1800px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-2.5">
     <div class="flex items-center justify-between gap-3 overflow-x-auto pb-1">
       <div id="phaseChipsContainer" class="flex items-center gap-2 shrink-0 p-1 bg-surf/80 border border-slate-800/90 rounded-2xl shadow-inner">
-        <!-- Chips de fase inyectados dinámicamente -->
       </div>
       
       <div class="flex items-center gap-2 shrink-0 ml-auto">
@@ -342,7 +382,6 @@
           <span>Sebastián</span>
         </button>
 
-        <!-- Botón Administrar Fases -->
         <button id="openPhaseManagerBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-medium border border-slate-700/80 btn-custom text-muted-custom hover:text-teal-300 flex items-center gap-1.5 shrink-0 transition-colors shadow-sm" title="Gestionar y personalizar fases del proyecto">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           <span>Fases</span>
@@ -367,7 +406,7 @@
   </div>
 
   <!-- CONTENEDOR PRINCIPAL DEL TABLERO KANBAN CON ARRASTRE FÍSICO -->
-  <main id="boardContainer" class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-3 flex-1 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
+  <main id="boardContainer" class="max-w-[1800px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-3 flex-1 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
     
     <!-- COLUMNA: POR HACER -->
     <div id="col-todo" class="kanban-col hidden md:flex flex-col rounded-2xl border border-slate-800/80 bg-surf/90 p-4 min-h-[580px] shadow-sm" data-status="todo">
@@ -415,7 +454,6 @@
       </button>
     </div>
     <div id="contextEditBody" class="space-y-3">
-      <!-- Inyectado dinámicamente -->
     </div>
   </div>
 
@@ -435,7 +473,6 @@
     <p class="text-[11px] text-muted-custom mt-2 mb-3">Acciones realizadas por cada compañero en tiempo real:</p>
 
     <div id="activityLogList" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
-      <!-- Inyectado dinámicamente -->
     </div>
 
     <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
@@ -507,7 +544,6 @@
       <div class="space-y-1.5 pt-1">
         <span class="text-[11px] font-semibold uppercase tracking-wider text-muted-custom">Fases Existentes:</span>
         <div id="phasesList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-          <!-- Renderizado dinámico -->
         </div>
       </div>
 
@@ -573,7 +609,6 @@
           <div>
             <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Fase</label>
             <select id="editTaskPhase" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
-              <!-- Renderizado dinámicamente -->
             </select>
           </div>
         </div>
@@ -657,23 +692,20 @@
     const ACTIVITY_STORAGE_KEY = 'project_kanban_activity_v2';
     const USER_STORAGE_KEY = 'project_kanban_active_user_v1';
     
-    // Fases optimizadas en español
     const DEFAULT_PHASES = [
       'Fase 1: Investigación y Prototipado',
       'Fase 2: Desarrollo y Prospección',
       'Fase 3: Lanzamiento Comercial'
     ];
 
-    // Colores para los indicadores de fase
     const PHASE_DOT_COLORS = [
-      '#6366f1', // Indigo para Fase 1
-      '#06b6d4', // Cyan para Fase 2
-      '#10b981', // Esmeralda para Fase 3
-      '#f59e0b', // Ámbar para Fase 4
-      '#ec4899'  // Rosa para Fase 5
+      '#6366f1',
+      '#06b6d4',
+      '#10b981',
+      '#f59e0b',
+      '#ec4899'
     ];
 
-    // PLANTILLAS PRE-CONFIGURADAS DE CHECKLISTS
     const CHECKLIST_TEMPLATES = {
       investigacion: {
         name: "Investigación y Validación",
@@ -721,6 +753,21 @@
         ]
       }
     };
+
+    // HELPERS DE PROGRESO DE SUBTAREAS Y TARJETAS
+    function getSubtaskProgress(st) {
+      if (typeof st.progress === 'number' && !isNaN(st.progress)) {
+        return Math.max(0, Math.min(100, Math.round(st.progress)));
+      }
+      return st.done ? 100 : 0;
+    }
+
+    function getTaskOverallProgress(task) {
+      const list = task.subtasks || [];
+      if (list.length === 0) return 0;
+      const sum = list.reduce((acc, st) => acc + getSubtaskProgress(st), 0);
+      return Math.round(sum / list.length);
+    }
 
     // GESTIÓN DEL USUARIO ACTIVO (BENJAMÍN / SEBASTIÁN)
     const urlParams = new URLSearchParams(window.location.search);
@@ -799,8 +846,8 @@
         notes: 'Enfoque propuesto: Probar preguntas presencialmente con 5 negocios locales antes de enviar formularios digitales.',
         updatedAt: Date.now() - (52 * 3600 * 1000),
         subtasks: [
-          { id: 'pst-1', text: 'Definir 5 puntos de dolor operativo', done: true },
-          { id: 'pst-2', text: 'Revisar redacción para público no técnico', done: false }
+          { id: 'pst-1', text: 'Definir 5 puntos de dolor operativo', done: true, progress: 100 },
+          { id: 'pst-2', text: 'Revisar redacción para público no técnico', done: false, progress: 40 }
         ]
       },
       {
@@ -830,7 +877,6 @@
       tasks = DEFAULT_TASKS;
     }
 
-    // REGISTRO DE ACTIVIDAD ASÍNCRONO (SINCRONIZADO EN TIEMPO REAL)
     function recordActivity(actionText) {
       const timestamp = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) + ' • ' + new Date().toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
       activityLog.unshift({
@@ -887,7 +933,7 @@
     }
 
     // ==========================================
-    // GESTIÓN DINÁMICA DE FASES (ATRACTIVA Y ELEGANTE)
+    // GESTIÓN DINÁMICA DE FASES
     // ==========================================
     const phaseChipsContainer = document.getElementById('phaseChipsContainer');
     const taskPhaseSelect = document.getElementById('taskPhaseSelect');
@@ -896,17 +942,14 @@
     const phaseManagerModal = document.getElementById('phaseManagerModal');
 
     function renderPhasesUI() {
-      // 1. Selector de Nueva Tarea: Solo 'Fase X'
       taskPhaseSelect.innerHTML = phases.map((p, idx) => 
         `<option value="${escapeHtml(p)}" title="${escapeHtml(p)}">Fase ${idx + 1}</option>`
       ).join('');
 
-      // 2. Selector en Modal de Edición
       editTaskPhase.innerHTML = phases.map((p, idx) => 
         `<option value="${escapeHtml(p)}">Fase ${idx + 1}: ${escapeHtml(p.replace(/^Fase\s*\d+[:\s-]*/i, ''))}</option>`
       ).join('');
 
-      // 3. Renderizado de Chips de Filtro con diseño pulido
       phaseChipsContainer.innerHTML = '';
       
       const isAllActive = currentPhaseFilter === 'all' && currentReviewFilter === 'all';
@@ -959,7 +1002,6 @@
         phaseChipsContainer.appendChild(btn);
       });
 
-      // 4. Lista del Administrador de Fases
       phasesList.innerHTML = '';
       phases.forEach((p, index) => {
         const row = document.createElement('div');
@@ -1210,7 +1252,6 @@
       }
     });
 
-    // Cerrar popovers al hacer clic afuera
     document.addEventListener('click', (e) => {
       if (!taskNotePopover.classList.contains('hidden')) {
         if (!taskNotePopover.contains(e.target) && !e.target.closest('.openNoteBtn')) {
@@ -1276,7 +1317,7 @@
     }
 
     // =========================================================================
-    // AUTO-SINCRONIZACIÓN EN TIEMPO REAL (SIN TAREAS ZOMBIE + HISTORIAL COMPARTIDO)
+    // AUTO-SINCRONIZACIÓN EN TIEMPO REAL
     // =========================================================================
     async function fetchRemoteTasks() {
       if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) {
@@ -1285,7 +1326,7 @@
         return;
       }
 
-      if (activeDrag || activeNoteTaskId || activeContextTaskId || !document.getElementById('editTaskModal').classList.contains('hidden')) {
+      if (activeDrag || activeFaderDrag || activeNoteTaskId || activeContextTaskId || !document.getElementById('editTaskModal').classList.contains('hidden')) {
         return;
       }
 
@@ -1376,7 +1417,6 @@
       }, 2500);
     }
 
-    // SELECTOR DE COLUMNAS PARA MÓVILES
     document.querySelectorAll('.mobile-tab').forEach((tab) => {
       tab.addEventListener('click', () => {
         const activeCol = tab.getAttribute('data-col');
@@ -1537,8 +1577,9 @@
       card.className = `kanban-card rounded-2xl border p-4 bg-card border-slate-700/80 shadow-md ${reviewClass} ${blockedClass} relative`;
       card.setAttribute('data-id', task.id);
 
-      const completedCount = (task.subtasks || []).filter(s => s.done).length;
+      const completedCount = (task.subtasks || []).filter(s => getSubtaskProgress(s) === 100).length;
       const totalCount = (task.subtasks || []).length;
+      const overallPct = getTaskOverallProgress(task);
       const isExpanded = openSubtasksTaskIds.has(task.id);
       const hasNotes = Boolean((task.notes || '').trim());
       const hasLink = Boolean((task.link || '').trim());
@@ -1558,7 +1599,6 @@
       const phaseIdx = phases.indexOf(task.phase);
       const phaseBadgeText = phaseIdx >= 0 ? `Fase ${phaseIdx + 1}` : (task.phase || 'Fase 1');
 
-      // Tarea estancada (>48h)
       let staleBadgeHtml = '';
       if (task.status === 'doing') {
         const lastActivity = task.updatedAt || Date.now();
@@ -1573,7 +1613,6 @@
         }
       }
 
-      // Badge de revisión
       let reviewBadgeHtml = '';
       if (task.reviewFor === 'sebastian') {
         reviewBadgeHtml = `
@@ -1598,7 +1637,6 @@
         `;
       }
 
-      // Banner de bloqueo
       let blockedBannerHtml = '';
       if (task.isBlocked) {
         blockedBannerHtml = `
@@ -1612,7 +1650,6 @@
         `;
       }
 
-      // Fecha límite
       let deadlineHtml = '';
       if (task.deadline) {
         const parts = task.deadline.split('-');
@@ -1659,7 +1696,6 @@
       card.innerHTML = `
         <div class="flex items-center justify-between gap-2 mb-2.5">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <!-- Puntos visuales para arrastre claro (Drag Dots Handle) -->
             <div class="drag-handle p-1.5 -ml-1 text-slate-500 hover:text-teal-400 hover:bg-slate-800/70 rounded-lg transition-all cursor-grab active:cursor-grabbing shrink-0 flex items-center justify-center" title="Arrastrar para mover">
               <svg class="drag-dots w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                 <circle cx="7" cy="5" r="1.6" />
@@ -1686,7 +1722,6 @@
           </div>
 
           <div class="flex items-center gap-1">
-            <!-- Botón para editar específicamente la parte superior -->
             <button class="topMetaEditBtn context-trigger p-1.5 rounded-lg text-muted-custom hover:text-teal-300 transition-colors" title="Editar metadatos superiores (prioridad, tamaño, fase, revisión, fecha)">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
             </button>
@@ -1696,7 +1731,6 @@
           </div>
         </div>
 
-        <!-- Título de Tarea con soporte de doble clic para edición rápida -->
         <h3 class="cardTitle text-base font-semibold text-slate-100 leading-snug cursor-pointer select-none hover:text-teal-300 transition-colors ${task.status === 'done' ? 'line-through opacity-60' : ''}" title="Doble clic para editar título directamente">
           ${escapeHtml(task.title)}
         </h3>
@@ -1733,13 +1767,13 @@
         ${totalCount > 0 ? `
           <div class="mt-3 flex items-center gap-2.5">
             <div class="flex-1 h-1.5 bg-black/40 rounded-full overflow-hidden">
-              <div class="h-full bg-teal-500 transition-all duration-300" style="width: ${(completedCount / totalCount) * 100}%"></div>
+              <div class="cardMainProgressBar h-full bg-teal-500 transition-all duration-300" style="width: ${overallPct}%"></div>
             </div>
-            <span class="text-[11px] text-muted-custom font-mono font-medium">${completedCount}/${totalCount}</span>
+            <span class="cardMainProgressLabel text-[11px] text-muted-custom font-mono font-medium">${overallPct}% (${completedCount}/${totalCount})</span>
           </div>
         ` : ''}
 
-        <!-- LISTA DE PASOS CON CARGADOR DE PLANTILLAS -->
+        <!-- LISTA DE PASOS CON SLIDER TÁCTIL Y PORCENTAJE -->
         <div class="subtasksWrapper ${isExpanded ? '' : 'hidden'} mt-3.5 pt-3.5 border-t border-slate-800/80 space-y-2.5">
           <div class="flex items-center justify-between px-0.5 text-[11px]">
             <span class="font-medium tracking-wide text-slate-300">Lista de verificación</span>
@@ -1753,31 +1787,46 @@
                 <option value="backend_api">🔌 Backend / API</option>
                 <option value="entrega_cliente">🤝 Demo / Entrega</option>
               </select>
-              <span class="font-mono text-teal-400 font-bold">${totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0}%</span>
+              <span class="subtasksHeaderPct font-mono text-teal-400 font-bold">${overallPct}%</span>
             </div>
           </div>
 
-          <div class="space-y-1.5 subtaskList">
-            ${(task.subtasks || []).map(st => `
-              <div class="group flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-800/80 bg-main/60 hover:border-slate-700 transition-colors text-xs" data-st-id="${st.id}">
-                <input 
-                  type="checkbox" 
-                  class="stCheckbox custom-checkbox" 
-                  data-task-id="${task.id}" 
-                  data-st-id="${st.id}" 
-                  ${st.done ? 'checked' : ''}
-                />
-                <span class="stText flex-1 select-text cursor-pointer leading-tight text-slate-200 ${st.done ? 'opacity-40 line-through' : ''}" title="Doble clic para editar texto">
-                  ${escapeHtml(st.text)}
-                </span>
-                <button class="editSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-amber-300 transition-opacity" title="Editar paso">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                </button>
-                <button class="deleteSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-red-400 transition-opacity" title="Eliminar paso">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+          <div class="space-y-2 subtaskList">
+            ${(task.subtasks || []).map(st => {
+              const stPct = getSubtaskProgress(st);
+              const isStDone = stPct === 100;
+              return `
+              <div class="group flex flex-col gap-2 px-3 py-2.5 rounded-xl border border-slate-800/80 bg-main/60 hover:border-slate-700 transition-colors text-xs" data-st-id="${st.id}">
+                <div class="flex items-center gap-2.5">
+                  <input 
+                    type="checkbox" 
+                    class="stCheckbox custom-checkbox" 
+                    data-task-id="${task.id}" 
+                    data-st-id="${st.id}" 
+                    ${isStDone ? 'checked' : ''}
+                  />
+                  <span class="stText flex-1 select-text cursor-pointer leading-snug text-slate-200 ${isStDone ? 'opacity-45 line-through' : ''}" title="Doble clic para editar texto">
+                    ${escapeHtml(st.text)}
+                  </span>
+                  <button class="editSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-amber-300 transition-opacity" title="Editar paso">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                  <button class="deleteSubtaskBtn opacity-70 sm:opacity-0 group-hover:opacity-100 p-1 text-muted-custom hover:text-red-400 transition-opacity" title="Eliminar paso">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso táctil + Porcentaje al lado -->
+                <div class="flex items-center gap-2.5 pl-7 pr-0.5">
+                  <div class="st-fader-track" data-task-id="${task.id}" data-st-id="${st.id}" title="Arrastra o haz clic para ajustar progreso">
+                    <div class="st-fader-fill" style="width: ${stPct}%"></div>
+                    <div class="st-fader-thumb" style="left: ${stPct}%"></div>
+                  </div>
+                  <span class="st-fader-pct font-mono text-[11px] font-semibold w-9 text-right shrink-0 ${stPct === 100 ? 'text-teal-400' : stPct > 0 ? 'text-slate-200' : 'text-slate-500'}">${stPct}%</span>
+                </div>
               </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
 
           <form class="addSubtaskForm flex items-center gap-2 pt-1">
@@ -1793,25 +1842,21 @@
           </form>
         </div>
 
-        <!-- BOTONES DE ACCIÓN (CON BOTÓN DE PELIGRO ⚠️ PARA ALERTA) -->
+        <!-- BOTONES DE ACCIÓN -->
         <div class="mt-3.5 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-1">
           <div class="flex items-center gap-1.5">
-            <!-- Botón de Ideas / Estrategia -->
             <button class="openNoteBtn p-1.5 rounded-xl border text-xs btn-custom ${hasNotes ? 'text-amber-300 border-amber-500/40' : 'text-muted-custom hover:text-amber-300'}" title="Ver / redactar plan de ideas (💡)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
             </button>
 
-            <!-- Botón con emoji de peligro (⚠️) para crear o editar alerta -->
             <button class="toggleBlockerBtn context-trigger p-1.5 rounded-xl border text-xs ${task.isBlocked ? 'border-rose-500/60 bg-rose-500/20 text-rose-300' : 'btn-custom text-muted-custom hover:text-rose-400'}" title="Crear alerta (⚠️)">
               <span class="text-sm">⚠️</span>
             </button>
 
-            <!-- Botón de Edición Completa -->
             <button class="editTaskBtn p-1.5 rounded-xl border text-xs btn-custom text-slate-300 hover:border-teal-500/50" title="Editar tarea completa (todos los campos)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             </button>
 
-            <!-- Botón Eliminar -->
             <button class="deleteBtn p-1.5 rounded-xl text-muted-custom hover:text-red-400 transition-colors" title="Eliminar tarea">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
@@ -1833,14 +1878,9 @@
         </div>
       `;
 
-      // Conectar motor físico de arrastre desde los puntos (drag-handle)
       initPhysicalDrag(card, task);
 
-      // -------------------------------------------------------------
-      // EVENTOS DE EDICIÓN CONTEXTUAL DIRECTA
-      // -------------------------------------------------------------
-
-      // 1. Doble Clic en Título: Edición Inline
+      // 1. Doble Clic en Título
       const titleEl = card.querySelector('.cardTitle');
       titleEl.addEventListener('dblclick', () => {
         const currentText = task.title;
@@ -1877,7 +1917,7 @@
         input.select();
       });
 
-      // 2. Alternar Prioridad con 1 Clic
+      // 2. Alternar Prioridad
       card.querySelector('.priorityBadgeBtn').addEventListener('click', () => {
         const order = ['normal', 'high', 'low'];
         const currentIdx = order.indexOf((task.priority || 'normal').toLowerCase());
@@ -1887,7 +1927,7 @@
         showToast(`Prioridad: ${task.priority.toUpperCase()}`);
       });
 
-      // 3. Alternar Tamaño (XS, S, M, L) con 1 Clic
+      // 3. Alternar Tamaño
       card.querySelector('.effortBadgeBtn').addEventListener('click', () => {
         const efforts = ['XS', 'S', 'M', 'L'];
         const currentIdx = efforts.indexOf(task.effort || 'S');
@@ -1897,7 +1937,7 @@
         showToast(`Tamaño: ${task.effort}`);
       });
 
-      // 4. Botón de Edición Específica de Metadatos Superiores
+      // 4. Metadatos Superiores
       const topMetaEditBtn = card.querySelector('.topMetaEditBtn');
       topMetaEditBtn.addEventListener('click', (ev) => {
         ev.stopPropagation();
@@ -1980,7 +2020,7 @@
         });
       });
 
-      // 5. Botón de Alerta / Peligro (⚠️) y Clic en Banner (MÁS GRANDE, SIN SUBTÍTULO, CAJA VACÍA)
+      // 5. Crear / Editar Alerta
       const openBlockerEdit = (ev, triggerEl) => {
         ev.preventDefault();
         ev.stopPropagation();
@@ -2048,7 +2088,7 @@
         blockerBanner.addEventListener('click', (e) => openBlockerEdit(e, blockerBanner));
       }
 
-      // 6. Edición de Link (MÁS GRANDE, TÍTULO "Link", CAJA VACÍA)
+      // 6. Edición de Link
       const openResourceEdit = (ev, triggerEl) => {
         ev.preventDefault();
         ev.stopPropagation();
@@ -2107,7 +2147,7 @@
         addResBtn.addEventListener('click', (e) => openResourceEdit(e, addResBtn));
       }
 
-      // 7. Edición de Fecha Límite Rápida
+      // 7. Edición de Fecha Límite
       const dlBadgeBtn = card.querySelector('.deadlineBadgeBtn');
       if (dlBadgeBtn) {
         dlBadgeBtn.addEventListener('click', (ev) => {
@@ -2154,7 +2194,7 @@
         });
       }
 
-      // 8. Alternar Revisión con Clic en el Badge
+      // 8. Alternar Revisión
       const reviewBadge = card.querySelector('.reviewBadgeBtn');
       if (reviewBadge) {
         reviewBadge.addEventListener('click', (ev) => {
@@ -2169,7 +2209,7 @@
         });
       }
 
-      // 9. Cargar Plantillas de Checklist Directamente
+      // 9. Cargar Plantillas de Checklist
       const templateSelect = card.querySelector('.applyTemplateSelect');
       templateSelect.addEventListener('change', (e) => {
         const key = e.target.value;
@@ -2180,7 +2220,8 @@
           task.subtasks.push({
             id: `pst-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
             text: stText,
-            done: false
+            done: false,
+            progress: 0
           });
         });
         task.updatedAt = Date.now();
@@ -2201,7 +2242,6 @@
       };
       card.querySelector('.toggleSubtasksBtn').addEventListener('click', toggleSubtasks);
 
-      // Abrir popover de notas
       card.querySelectorAll('.openNoteBtn').forEach(btn => {
         btn.addEventListener('click', (ev) => {
           ev.stopPropagation();
@@ -2209,29 +2249,36 @@
         });
       });
 
-      // Botón de edición completa
       card.querySelector('.editTaskBtn').addEventListener('click', (ev) => {
         ev.stopPropagation();
         openEditModal(task);
       });
 
-      // Checkboxes de sub-pasos
+      // Checkboxes de sub-pasos (sincroniza progreso a 100% o 0%)
       card.querySelectorAll('.stCheckbox').forEach(cb => {
         cb.addEventListener('change', (e) => {
           const stId = e.target.getAttribute('data-st-id');
           const st = (task.subtasks || []).find(s => s.id === stId);
-          if (st) st.done = e.target.checked;
+          if (st) {
+            st.done = e.target.checked;
+            st.progress = e.target.checked ? 100 : 0;
+          }
           task.updatedAt = Date.now();
           openSubtasksTaskIds.add(task.id);
           saveTasks(true);
         });
       });
 
-      // Edición inline de micro-pasos
+      // Sliders táctiles de sub-pasos + edición inline
       card.querySelectorAll('.subtaskList > div').forEach(row => {
         const stId = row.getAttribute('data-st-id');
         const st = (task.subtasks || []).find(s => s.id === stId);
         if (!st) return;
+
+        const track = row.querySelector('.st-fader-track');
+        if (track) {
+          initSubtaskFader(track, card, task, st);
+        }
 
         const textSpan = row.querySelector('.stText');
         const editBtn = row.querySelector('.editSubtaskBtn');
@@ -2292,7 +2339,8 @@
         task.subtasks.push({
           id: `pst-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
           text: text,
-          done: false
+          done: false,
+          progress: 0
         });
         task.updatedAt = Date.now();
         openSubtasksTaskIds.add(task.id);
@@ -2338,6 +2386,117 @@
       }
 
       return card;
+    }
+
+    // =========================================================================
+    // MOTOR TÁCTIL DE BARRA DE PROGRESO DE SUBTAREAS (CERO LAG + SETTLE SUAVE)
+    // =========================================================================
+    let activeFaderDrag = null;
+
+    function initSubtaskFader(track, card, task, st) {
+      const fill = track.querySelector('.st-fader-fill');
+      const thumb = track.querySelector('.st-fader-thumb');
+      const pctLabel = track.parentElement.querySelector('.st-fader-pct');
+      const checkbox = track.closest('[data-st-id]').querySelector('.stCheckbox');
+      const stText = track.closest('[data-st-id]').querySelector('.stText');
+
+      const updateVisuals = (pct) => {
+        fill.style.width = `${pct}%`;
+        thumb.style.left = `${pct}%`;
+        if (pctLabel) {
+          pctLabel.textContent = `${pct}%`;
+          pctLabel.className = `st-fader-pct font-mono text-[11px] font-semibold w-9 text-right shrink-0 ${
+            pct === 100 ? 'text-teal-400' : pct > 0 ? 'text-slate-200' : 'text-slate-500'
+          }`;
+        }
+        if (checkbox) checkbox.checked = (pct === 100);
+        if (stText) {
+          if (pct === 100) stText.classList.add('opacity-45', 'line-through');
+          else stText.classList.remove('opacity-45', 'line-through');
+        }
+
+        // Actualizar barra y porcentaje general de la tarjeta en vivo
+        st.progress = pct;
+        st.done = (pct === 100);
+        const overallPct = getTaskOverallProgress(task);
+        const completedCount = (task.subtasks || []).filter(s => getSubtaskProgress(s) === 100).length;
+        const totalCount = (task.subtasks || []).length;
+
+        const mainBar = card.querySelector('.cardMainProgressBar');
+        const mainLabel = card.querySelector('.cardMainProgressLabel');
+        const headerPct = card.querySelector('.subtasksHeaderPct');
+        if (mainBar) mainBar.style.width = `${overallPct}%`;
+        if (mainLabel) mainLabel.textContent = `${overallPct}% (${completedCount}/${totalCount})`;
+        if (headerPct) headerPct.textContent = `${overallPct}%`;
+      };
+
+      const computeRawPct = (clientX) => {
+        const rect = track.getBoundingClientRect();
+        const ratio = (clientX - rect.left) / Math.max(1, rect.width);
+        return Math.max(0, Math.min(100, Math.round(ratio * 100)));
+      };
+
+      track.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        track.classList.add('fader-dragging');
+        const initialPct = computeRawPct(e.clientX);
+        updateVisuals(initialPct);
+
+        activeFaderDrag = {
+          track,
+          task,
+          st,
+          currentX: e.clientX,
+          rafId: null,
+          updateVisuals,
+          computeRawPct
+        };
+
+        document.addEventListener('pointermove', onFaderMove, { passive: true });
+        document.addEventListener('pointerup', onFaderEnd);
+        document.addEventListener('pointercancel', onFaderEnd);
+      });
+    }
+
+    function onFaderMove(e) {
+      if (!activeFaderDrag) return;
+      activeFaderDrag.currentX = e.clientX;
+      if (!activeFaderDrag.rafId) {
+        activeFaderDrag.rafId = requestAnimationFrame(() => {
+          if (!activeFaderDrag) return;
+          activeFaderDrag.rafId = null;
+          const pct = activeFaderDrag.computeRawPct(activeFaderDrag.currentX);
+          activeFaderDrag.updateVisuals(pct);
+        });
+      }
+    }
+
+    function onFaderEnd() {
+      if (!activeFaderDrag) return;
+      if (activeFaderDrag.rafId) cancelAnimationFrame(activeFaderDrag.rafId);
+
+      document.removeEventListener('pointermove', onFaderMove);
+      document.removeEventListener('pointerup', onFaderEnd);
+      document.removeEventListener('pointercancel', onFaderEnd);
+
+      const { track, task, st, currentX, updateVisuals, computeRawPct } = activeFaderDrag;
+      activeFaderDrag = null;
+
+      // Re-activar transición suave (200ms ease-out) para aterrizar en múltiplos de 5%
+      track.classList.remove('fader-dragging');
+      const rawPct = computeRawPct(currentX);
+      const snappedPct = Math.round(rawPct / 5) * 5;
+
+      updateVisuals(snappedPct);
+      task.updatedAt = Date.now();
+      openSubtasksTaskIds.add(task.id);
+
+      setTimeout(() => {
+        saveTasks(true);
+      }, 210);
     }
 
     // =========================================================================
@@ -2567,7 +2726,6 @@
     renderActivityLog();
     renderBoard();
 
-    // Sincronización continua en segundo plano (cada 10 segundos)
     if (BACKEND_SYNC_URL) {
       fetchRemoteTasks();
       setInterval(fetchRemoteTasks, 10000);
