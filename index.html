@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Grinderos proyecto</title>
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- PEGA TU FAVICON AQUÍ -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d1117' stroke='%2330363d' stroke-width='3'/%3E%3Crect x='11' y='14' width='11' height='36' rx='4' fill='%2314b8a6'/%3E%3Crect x='26.5' y='14' width='11' height='24' rx='4' fill='%2322d3ee'/%3E%3Crect x='42' y='14' width='11' height='30' rx='4' fill='%23FF198F'/%3E%3C/svg%3E">  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d1117' stroke='%2330363d' stroke-width='3'/%3E%3Crect x='11' y='14' width='11' height='36' rx='4' fill='%2314b8a6'/%3E%3Crect x='26.5' y='14' width='11' height='24' rx='4' fill='%2322d3ee'/%3E%3Crect x='42' y='14' width='11' height='30' rx='4' fill='%23FF198F'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -131,7 +129,7 @@
       backdrop-filter: blur(14px);
     }
 
-    /* MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA */
+    /* MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA (MÁS AMPLIO) */
     #contextEditPopover {
       box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.3);
       backdrop-filter: blur(14px);
@@ -177,7 +175,7 @@
       left: 0 !important;
       z-index: 9999 !important;
       pointer-events: none !important;
-      transition: none !important; /* Cero lag al seguir el cursor */
+      transition: none !important;
       box-shadow: 
         0 32px 64px -12px rgba(0, 0, 0, 0.95),
         0 18px 36px -18px rgba(0, 0, 0, 0.8),
@@ -209,7 +207,7 @@
       opacity: 0.85;
     }
     .drag-handle {
-      touch-action: none; /* Evita scroll accidental al arrastrar */
+      touch-action: none;
     }
     .drag-handle:hover .drag-dots {
       opacity: 1;
@@ -408,15 +406,15 @@
     </div>
   </main>
 
-  <!-- MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA -->
-  <div id="contextEditPopover" class="hidden fixed z-50 rounded-2xl bg-surf border border-slate-700 p-3.5 w-84 shadow-2xl transition-all duration-100">
-    <div class="flex items-center justify-between pb-2 border-b border-slate-800 mb-2.5">
-      <span id="contextEditTitle" class="text-[11px] font-semibold text-teal-400 uppercase tracking-wider">Edición Rápida</span>
-      <button id="closeContextEditBtn" class="text-muted-custom hover:text-slate-100 p-0.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+  <!-- MINI-POPOVER DE EDICIÓN CONTEXTUAL DIRECTA (AMPLIADO) -->
+  <div id="contextEditPopover" class="hidden fixed z-50 rounded-2xl bg-surf border border-slate-700 p-5 w-[92vw] sm:w-[420px] shadow-2xl transition-all duration-100">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3.5">
+      <span id="contextEditTitle" class="text-xs font-semibold text-teal-400 uppercase tracking-wider flex items-center gap-2 leading-none">Edición Rápida</span>
+      <button id="closeContextEditBtn" class="text-muted-custom hover:text-slate-100 p-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <div id="contextEditBody" class="space-y-2.5">
+    <div id="contextEditBody" class="space-y-3">
       <!-- Inyectado dinámicamente -->
     </div>
   </div>
@@ -446,7 +444,7 @@
     </div>
   </aside>
 
-  <!-- VENTANA FLOTANTE DE NOTAS (ENTER GUARDA Y CIERRA) -->
+  <!-- VENTANA FLOTANTE DE NOTAS -->
   <div id="taskNotePopover" class="hidden fixed z-50 rounded-2xl bg-surf border border-slate-700/90 p-4 w-[92vw] sm:w-[460px] shadow-2xl transition-all duration-150">
     <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-slate-800/80">
       <div class="flex-1 min-w-0">
@@ -456,7 +454,7 @@
         </div>
         <p id="notePopoverTaskTitle" class="text-[11px] text-teal-300 font-medium truncate mt-0.5">Título de la tarea...</p>
       </div>
-      <button id="closeNotePopoverBtn" class="p-1 rounded-lg text-muted-custom hover:text-slate-100 transition-colors" title="Cerrar (o haz clic afuera)">
+      <button id="closeNotePopoverBtn" class="p-1 rounded-lg text-muted-custom hover:text-slate-100 transition-colors" title="Cerrar">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -465,14 +463,13 @@
       <textarea 
         id="notePopoverTextarea" 
         rows="8" 
-        placeholder="Escribe aquí tu enfoque de resolución, arquitectura o dudas... Presiona Enter para guardar y cerrar (Shift+Enter para salto de línea)."
+        placeholder="Escribe aquí tu enfoque de resolución, arquitectura o dudas..."
         class="w-full rounded-xl p-3 text-xs leading-relaxed border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200 resize-y"
       ></textarea>
       
-      <div class="flex items-center justify-between text-[10px] text-muted-custom pt-1">
-        <span>Presiona <strong>Enter</strong> para guardar y cerrar</span>
+      <div class="flex items-center justify-end pt-1">
         <button id="saveNotePopoverBtn" class="px-3.5 py-1 rounded-lg text-xs font-semibold btn-accent">
-          Guardar (Enter)
+          Guardar
         </button>
       </div>
     </div>
@@ -498,7 +495,7 @@
         <input 
           id="newPhaseNameInput" 
           type="text" 
-          placeholder="Nombre de la nueva fase... (Presiona Enter)" 
+          placeholder="Nombre de la nueva fase..." 
           class="flex-1 rounded-xl px-3 py-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-100" 
           required 
         />
@@ -600,11 +597,11 @@
             />
           </div>
           <div>
-            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Enlace / Recurso</label>
+            <label class="block text-[11px] uppercase tracking-wider text-muted-custom font-semibold mb-1">Link</label>
             <input 
               type="url" 
               id="editTaskLink" 
-              placeholder="https://drive.google.com/..." 
+              placeholder="" 
               class="w-full rounded-xl p-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200" 
             />
           </div>
@@ -628,7 +625,7 @@
           <textarea 
             id="editTaskNotes" 
             rows="3" 
-            placeholder="Especificaciones, planes de ejecución, ideas o dudas... (Enter guarda el formulario)"
+            placeholder="Especificaciones, planes de ejecución, ideas o dudas..."
             class="w-full rounded-xl p-2.5 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-200"
           ></textarea>
         </div>
@@ -833,7 +830,7 @@
       tasks = DEFAULT_TASKS;
     }
 
-    // REGISTRO DE ACTIVIDAD ASÍNCRONO
+    // REGISTRO DE ACTIVIDAD ASÍNCRONO (SINCRONIZADO EN TIEMPO REAL)
     function recordActivity(actionText) {
       const timestamp = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) + ' • ' + new Date().toLocaleDateString('es-CL', { month: 'short', day: 'numeric' });
       activityLog.unshift({
@@ -846,6 +843,7 @@
         localStorage.setItem(ACTIVITY_STORAGE_KEY, JSON.stringify(activityLog));
       } catch(e) {}
       renderActivityLog();
+      pushTasksToRemote();
     }
 
     function renderActivityLog() {
@@ -1098,11 +1096,12 @@
       activityLog = [];
       localStorage.removeItem(ACTIVITY_STORAGE_KEY);
       renderActivityLog();
+      pushTasksToRemote();
       showToast('Historial limpio');
     });
 
     // ==========================================
-    // EDICIÓN CONTEXTUAL DIRECTA (MINI-POPOVER)
+    // EDICIÓN CONTEXTUAL DIRECTA (MINI-POPOVER AMPLIADO)
     // ==========================================
     const contextEditPopover = document.getElementById('contextEditPopover');
     const contextEditTitle = document.getElementById('contextEditTitle');
@@ -1111,20 +1110,20 @@
 
     let activeContextTaskId = null;
 
-    function openContextPopover(title, htmlContent, targetEl) {
-      contextEditTitle.textContent = title;
+    function openContextPopover(titleHtml, htmlContent, targetEl) {
+      contextEditTitle.innerHTML = titleHtml;
       contextEditBody.innerHTML = htmlContent;
 
       const rect = targetEl.getBoundingClientRect();
-      const popoverWidth = 330;
+      const popoverWidth = Math.min(420, window.innerWidth * 0.92);
       let left = Math.max(12, rect.left);
       let top = rect.bottom + 8;
 
       if (left + popoverWidth > window.innerWidth - 12) {
         left = window.innerWidth - popoverWidth - 12;
       }
-      if (top + 280 > window.innerHeight) {
-        top = Math.max(12, rect.top - 290);
+      if (top + 310 > window.innerHeight) {
+        top = Math.max(12, rect.top - 320);
       }
 
       contextEditPopover.style.top = `${top}px`;
@@ -1140,7 +1139,7 @@
     closeContextEditBtn.addEventListener('click', closeContextPopover);
 
     // ==========================================
-    // VENTANA FLOTANTE DE NOTAS (ENTER GUARDA Y CIERRA)
+    // VENTANA FLOTANTE DE NOTAS
     // ==========================================
     const taskNotePopover = document.getElementById('taskNotePopover');
     const notePopoverTaskTitle = document.getElementById('notePopoverTaskTitle');
@@ -1204,7 +1203,6 @@
     closeNotePopoverBtn.addEventListener('click', closeNotePopover);
     saveNotePopoverBtn.addEventListener('click', closeNotePopover);
 
-    // REGLA: Enter guarda y cierra la nota (Shift+Enter para salto de línea)
     notePopoverTextarea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -1236,7 +1234,6 @@
       }
     });
 
-    // REGLA GLOBAL: Enter en el modal guarda y cierra
     document.getElementById('editTaskForm').addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'BUTTON') {
         e.preventDefault();
@@ -1254,7 +1251,7 @@
           embeds: [{
             title: "🚀 ¡Entregable Completado!",
             description: `**${task.title}**`,
-            color: 890074, // #0d9488 teal
+            color: 890074,
             fields: [
               { name: "Fase", value: task.phase || phases[0], inline: true },
               { name: "Prioridad", value: (task.priority || "normal").toUpperCase(), inline: true },
@@ -1288,7 +1285,6 @@
         return;
       }
 
-      // No interrumpir si el usuario está arrastrando o escribiendo en un popover/modal
       if (activeDrag || activeNoteTaskId || activeContextTaskId || !document.getElementById('editTaskModal').classList.contains('hidden')) {
         return;
       }
@@ -1304,17 +1300,15 @@
         const remoteTasks = Array.isArray(data) ? data : (data.tasks || []);
         const remoteLog = Array.isArray(data.activityLog) ? data.activityLog : null;
 
-        // 1. Sincronización de tareas exacta: elimina las tareas borradas remotamente
         if (Array.isArray(remoteTasks)) {
           const localJson = JSON.stringify(tasks);
           const remoteJson = JSON.stringify(remoteTasks);
           if (localJson !== remoteJson) {
             tasks = remoteTasks;
-            saveTasks(false); // Guarda localmente y re-renderiza sin reenviar al servidor
+            saveTasks(false);
           }
         }
 
-        // 2. Sincronización del historial compartido entre ambos compañeros
         if (remoteLog && Array.isArray(remoteLog)) {
           const localLogJson = JSON.stringify(activityLog);
           const remoteLogJson = JSON.stringify(remoteLog);
@@ -1337,25 +1331,6 @@
     }
 
     async function pushTasksToRemote() {
-      if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com/macros/s/AKfycbz-MZm9WsguuQCI3yxGARUzsHrfHclgvDt8C5Pn2NcPgMq-T17ZtrO2peiZaItua4nqWg/exec')) return;
-      try {
-        await fetch(BACKEND_SYNC_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'push_update',
-            user: activeUser,
-            tasks: tasks,
-            activityLog: activityLog,
-            timestamp: Date.now()
-          })
-        });
-      } catch(err) {
-        console.warn('Fallo al emitir actualización inmediata:', err);
-      }
-    }
-    async function pushTasksToRemote() {
       if (!BACKEND_SYNC_URL || !BACKEND_SYNC_URL.startsWith('https://script.google.com')) return;
       try {
         await fetch(BACKEND_SYNC_URL, {
@@ -1366,6 +1341,7 @@
             action: 'push_update',
             user: activeUser,
             tasks: tasks,
+            activityLog: activityLog,
             timestamp: Date.now()
           })
         });
@@ -1517,7 +1493,6 @@
       colDoing.innerHTML = '';
       colDone.innerHTML = '';
 
-      // Filtrar tareas por fase y filtro de revisión
       const filteredTasks = tasks.filter(t => {
         const matchesPhase = (currentPhaseFilter === 'all') || (t.phase === currentPhaseFilter);
         let matchesReview = true;
@@ -1623,11 +1598,11 @@
         `;
       }
 
-      // Banner de bloqueo sin la palabra "bloqueada"
+      // Banner de bloqueo
       let blockedBannerHtml = '';
       if (task.isBlocked) {
         blockedBannerHtml = `
-          <div class="blockerBanner context-trigger mt-2.5 text-xs py-1.5 px-3 rounded-xl border border-rose-500/50 bg-rose-950/40 text-rose-200 flex items-center justify-between gap-2 cursor-pointer hover:border-rose-400 transition-colors" title="Clic para editar o quitar bloqueo">
+          <div class="blockerBanner context-trigger mt-2.5 text-xs py-1.5 px-3 rounded-xl border border-rose-500/50 bg-rose-950/40 text-rose-200 flex items-center justify-between gap-2 cursor-pointer hover:border-rose-400 transition-colors" title="Clic para editar o quitar alerta">
             <div class="flex items-center gap-2 min-w-0">
               <span class="text-sm shrink-0">⚠️</span>
               <span class="truncate text-xs text-rose-200 font-medium">${escapeHtml(task.blockedReason || 'Dependencia pendiente')}</span>
@@ -1738,11 +1713,11 @@
         <!-- Recurso Entregable -->
         ${hasLink ? `
           <div class="mt-2.5 flex items-center gap-1.5">
-            <a href="${escapeHtml(task.link)}" target="_blank" rel="noopener noreferrer" class="resourceLinkAnchor inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-sky-500/30 bg-sky-950/30 text-sky-300 hover:bg-sky-900/40 text-xs font-medium transition-colors" title="Abrir entregable externo (Clic secundario para editar)">
+            <a href="${escapeHtml(task.link)}" target="_blank" rel="noopener noreferrer" class="resourceLinkAnchor inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-sky-500/30 bg-sky-950/30 text-sky-300 hover:bg-sky-900/40 text-xs font-medium transition-colors" title="Abrir link (Clic secundario para editar)">
               <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-              <span class="truncate max-w-[220px]">Recurso del entregable</span>
+              <span class="truncate max-w-[220px]">Link</span>
             </a>
-            <button class="editResourceBtn context-trigger p-1 text-muted-custom hover:text-sky-300 transition-colors" title="Editar enlace directamente">
+            <button class="editResourceBtn context-trigger p-1 text-muted-custom hover:text-sky-300 transition-colors" title="Editar link">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
@@ -1750,7 +1725,7 @@
           <div class="mt-2">
             <button class="addResourceBtn context-trigger inline-flex items-center gap-1 text-[11px] text-muted-custom hover:text-sky-300 transition-colors">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-              <span>+ Agregar recurso / link</span>
+              <span>Link</span>
             </button>
           </div>
         `}
@@ -1808,7 +1783,7 @@
           <form class="addSubtaskForm flex items-center gap-2 pt-1">
             <input 
               type="text" 
-              placeholder="+ Agregar micro-paso... (Enter guarda)" 
+              placeholder="+ Agregar micro-paso..." 
               class="flex-1 rounded-xl px-3 py-2 text-xs border border-slate-700/80 outline-none bg-main focus:border-teal-500/80 text-slate-100" 
               required
             />
@@ -1818,7 +1793,7 @@
           </form>
         </div>
 
-        <!-- BOTONES DE ACCIÓN (CON BOTÓN DE PELIGRO ⚠️ PARA BLOQUEO) -->
+        <!-- BOTONES DE ACCIÓN (CON BOTÓN DE PELIGRO ⚠️ PARA ALERTA) -->
         <div class="mt-3.5 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-1">
           <div class="flex items-center gap-1.5">
             <!-- Botón de Ideas / Estrategia -->
@@ -1826,8 +1801,8 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
             </button>
 
-            <!-- Botón con emoji de peligro (⚠️) para crear o editar bloqueo -->
-            <button class="toggleBlockerBtn context-trigger p-1.5 rounded-xl border text-xs ${task.isBlocked ? 'border-rose-500/60 bg-rose-500/20 text-rose-300' : 'btn-custom text-muted-custom hover:text-rose-400'}" title="${task.isBlocked ? 'Editar o quitar bloqueo existente (⚠️)' : 'Agregar bloqueo / dependencia (⚠️)'}">
+            <!-- Botón con emoji de peligro (⚠️) para crear o editar alerta -->
+            <button class="toggleBlockerBtn context-trigger p-1.5 rounded-xl border text-xs ${task.isBlocked ? 'border-rose-500/60 bg-rose-500/20 text-rose-300' : 'btn-custom text-muted-custom hover:text-rose-400'}" title="Crear alerta (⚠️)">
               <span class="text-sm">⚠️</span>
             </button>
 
@@ -1865,7 +1840,7 @@
       // EVENTOS DE EDICIÓN CONTEXTUAL DIRECTA
       // -------------------------------------------------------------
 
-      // 1. Doble Clic en Título: Edición Inline con Enter para guardar
+      // 1. Doble Clic en Título: Edición Inline
       const titleEl = card.querySelector('.cardTitle');
       titleEl.addEventListener('dblclick', () => {
         const currentText = task.title;
@@ -1932,11 +1907,11 @@
         ).join('');
 
         const bodyHtml = `
-          <div class="space-y-2.5 text-xs">
-            <div class="grid grid-cols-2 gap-2">
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Prioridad</label>
-                <select id="ctxMetaPriority" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+                <select id="ctxMetaPriority" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
                   <option value="normal" ${task.priority === 'normal' ? 'selected' : ''}>🟡 Normal</option>
                   <option value="high" ${task.priority === 'high' ? 'selected' : ''}>🔴 Alta</option>
                   <option value="low" ${task.priority === 'low' ? 'selected' : ''}>🟢 Baja</option>
@@ -1944,7 +1919,7 @@
               </div>
               <div>
                 <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Tamaño</label>
-                <select id="ctxMetaEffort" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none font-mono text-amber-300 font-bold">
+                <select id="ctxMetaEffort" class="custom-select w-full rounded-xl p-2 text-xs outline-none font-mono text-amber-300 font-bold">
                   <option value="XS" ${task.effort === 'XS' ? 'selected' : ''}>XS</option>
                   <option value="S" ${task.effort === 'S' ? 'selected' : ''}>S</option>
                   <option value="M" ${task.effort === 'M' ? 'selected' : ''}>M</option>
@@ -1954,14 +1929,14 @@
             </div>
             <div>
               <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Fase</label>
-              <select id="ctxMetaPhase" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+              <select id="ctxMetaPhase" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
                 ${phaseOptions}
               </select>
             </div>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Revisión</label>
-                <select id="ctxMetaReview" class="custom-select w-full rounded-xl p-1.5 text-xs outline-none">
+                <select id="ctxMetaReview" class="custom-select w-full rounded-xl p-2 text-xs outline-none">
                   <option value="none" ${task.reviewFor === 'none' ? 'selected' : ''}>Sin revisión</option>
                   <option value="sebastian" ${task.reviewFor === 'sebastian' ? 'selected' : ''}>👁️ Sebastián</option>
                   <option value="benjamin" ${task.reviewFor === 'benjamin' ? 'selected' : ''}>👁️ Benjamín</option>
@@ -1970,12 +1945,11 @@
               </div>
               <div>
                 <label class="block text-[10px] text-muted-custom uppercase font-semibold mb-1">Fecha Límite</label>
-                <input type="date" id="ctxMetaDeadline" value="${task.deadline || ''}" class="w-full rounded-xl p-1.5 text-xs border border-slate-700 bg-main outline-none text-slate-200" />
+                <input type="date" id="ctxMetaDeadline" value="${task.deadline || ''}" class="w-full rounded-xl p-2 text-xs border border-slate-700 bg-main outline-none text-slate-200" />
               </div>
             </div>
-            <div class="flex justify-between items-center pt-1">
-              <span class="text-[10px] text-muted-custom">Enter guarda cambios</span>
-              <button id="ctxSaveMetaBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold btn-accent">Guardar (Enter)</button>
+            <div class="flex justify-end items-center pt-1">
+              <button id="ctxSaveMetaBtn" class="px-4 py-1.5 rounded-xl text-xs font-semibold btn-accent">Guardar</button>
             </div>
           </div>
         `;
@@ -2006,28 +1980,28 @@
         });
       });
 
-      // 5. Botón de Bloqueo / Dependencia Inferior (⚠️) y Clic en Banner
+      // 5. Botón de Alerta / Peligro (⚠️) y Clic en Banner (MÁS GRANDE, SIN SUBTÍTULO, CAJA VACÍA)
       const openBlockerEdit = (ev, triggerEl) => {
         ev.preventDefault();
         ev.stopPropagation();
         activeContextTaskId = task.id;
         const isCurrentlyBlocked = Boolean(task.isBlocked);
+        const titleHtml = `<span class="inline-flex items-center gap-1.5 leading-none"><span class="text-base leading-none">⚠️</span><span>Crear alerta</span></span>`;
         const bodyHtml = `
-          <div class="space-y-2.5">
-            <label class="block text-[10px] uppercase font-semibold text-rose-300">Motivo del bloqueo o dependencia:</label>
-            <textarea id="contextBlockedInput" rows="2" placeholder="Escribe el motivo del bloqueo... (Presiona Enter para guardar)" class="w-full rounded-xl p-2.5 text-xs border border-slate-700 outline-none bg-main text-slate-100 focus:border-rose-500">${escapeHtml(task.blockedReason || '')}</textarea>
+          <div class="space-y-3">
+            <textarea id="contextBlockedInput" rows="4" placeholder="" class="w-full rounded-xl p-3 text-sm border border-slate-700 outline-none bg-main text-slate-100 focus:border-rose-500 resize-none"></textarea>
             <div class="flex items-center justify-between pt-1">
               ${isCurrentlyBlocked ? `
-                <button id="contextUnblockBtn" class="text-xs text-teal-400 hover:underline font-semibold">Desbloquear tarea</button>
-                <button id="contextSaveBlockBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold btn-accent">Guardar (Enter)</button>
+                <button id="contextUnblockBtn" class="text-xs text-teal-400 hover:underline font-semibold">Quitar alerta</button>
+                <button id="contextSaveBlockBtn" class="px-4 py-2 rounded-xl text-xs font-semibold btn-accent">Guardar</button>
               ` : `
                 <span></span>
-                <button id="contextSaveBlockBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white">Bloquear Tarea (Enter)</button>
+                <button id="contextSaveBlockBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white">Guardar</button>
               `}
             </div>
           </div>
         `;
-        openContextPopover(isCurrentlyBlocked ? 'Editar Bloqueo ⚠️' : 'Crear Bloqueo ⚠️', bodyHtml, triggerEl);
+        openContextPopover(titleHtml, bodyHtml, triggerEl);
 
         const saveBlocker = () => {
           const val = document.getElementById('contextBlockedInput').value.trim();
@@ -2035,16 +2009,15 @@
           task.isBlocked = true;
           task.updatedAt = Date.now();
           saveTasks(true);
-          recordActivity(`Marcó bloqueo en "${task.title}" (${val || 'sin motivo'})`);
+          recordActivity(`Creó alerta en "${task.title}"${val ? ' (' + val + ')' : ''}`);
           closeContextPopover();
-          showToast('Bloqueo registrado ⚠️');
+          showToast('Alerta guardada ⚠️');
         };
 
         document.getElementById('contextSaveBlockBtn').addEventListener('click', saveBlocker);
         
         const txtInput = document.getElementById('contextBlockedInput');
         txtInput.focus();
-        txtInput.select();
         txtInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -2059,9 +2032,9 @@
             task.blockedReason = '';
             task.updatedAt = Date.now();
             saveTasks(true);
-            recordActivity(`Desbloqueó tarea "${task.title}"`);
+            recordActivity(`Quitó alerta en "${task.title}"`);
             closeContextPopover();
-            showToast('Tarea desbloqueada');
+            showToast('Alerta eliminada');
           });
         }
       };
@@ -2075,37 +2048,36 @@
         blockerBanner.addEventListener('click', (e) => openBlockerEdit(e, blockerBanner));
       }
 
-      // 6. Edición de Recurso / Enlace
+      // 6. Edición de Link (MÁS GRANDE, TÍTULO "Link", CAJA VACÍA)
       const openResourceEdit = (ev, triggerEl) => {
         ev.preventDefault();
         ev.stopPropagation();
         activeContextTaskId = task.id;
         const bodyHtml = `
-          <div class="space-y-2">
-            <input type="url" id="contextLinkInput" value="${escapeHtml(task.link || '')}" placeholder="https://drive.google.com/... (Enter guarda)" class="w-full rounded-xl p-2 text-xs border border-slate-700 outline-none bg-main text-slate-100" />
+          <div class="space-y-3">
+            <input type="url" id="contextLinkInput" value="" placeholder="" class="w-full rounded-xl p-3 text-sm border border-slate-700 outline-none bg-main text-slate-100 focus:border-teal-500" />
             <div class="flex items-center justify-between pt-1">
-              <button id="contextDeleteLinkBtn" class="text-[11px] text-rose-400 hover:underline">Quitar enlace</button>
-              <button id="contextSaveLinkBtn" class="px-3 py-1 rounded-lg text-xs font-medium btn-accent">Guardar (Enter)</button>
+              <button id="contextDeleteLinkBtn" class="text-xs text-rose-400 hover:underline">Quitar link</button>
+              <button id="contextSaveLinkBtn" class="px-4 py-2 rounded-xl text-xs font-semibold btn-accent">Guardar</button>
             </div>
           </div>
         `;
-        openContextPopover('Enlace del Entregable', bodyHtml, triggerEl);
+        openContextPopover('Link', bodyHtml, triggerEl);
 
         const saveResource = () => {
           const val = document.getElementById('contextLinkInput').value.trim();
           task.link = val;
           task.updatedAt = Date.now();
           saveTasks(true);
-          recordActivity(`Actualizó enlace de "${task.title}"`);
+          recordActivity(`Actualizó link de "${task.title}"`);
           closeContextPopover();
-          showToast('Enlace guardado');
+          showToast('Link guardado');
         };
 
         document.getElementById('contextSaveLinkBtn').addEventListener('click', saveResource);
         
         const linkInp = document.getElementById('contextLinkInput');
         linkInp.focus();
-        linkInp.select();
         linkInp.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
@@ -2118,7 +2090,7 @@
           task.updatedAt = Date.now();
           saveTasks(true);
           closeContextPopover();
-          showToast('Enlace eliminado');
+          showToast('Link eliminado');
         });
       };
 
@@ -2142,11 +2114,11 @@
           ev.stopPropagation();
           activeContextTaskId = task.id;
           const bodyHtml = `
-            <div class="space-y-2">
-              <input type="date" id="contextDeadlineInput" value="${task.deadline || ''}" class="w-full rounded-xl p-2 text-xs border border-slate-700 outline-none bg-main text-slate-100 cursor-pointer" />
+            <div class="space-y-3">
+              <input type="date" id="contextDeadlineInput" value="${task.deadline || ''}" class="w-full rounded-xl p-2.5 text-xs border border-slate-700 outline-none bg-main text-slate-100 cursor-pointer" />
               <div class="flex items-center justify-between pt-1">
-                <button id="contextClearDeadlineBtn" class="text-[11px] text-rose-400 hover:underline">Sin fecha</button>
-                <button id="contextSaveDeadlineBtn" class="px-3 py-1 rounded-lg text-xs font-medium btn-accent">Guardar (Enter)</button>
+                <button id="contextClearDeadlineBtn" class="text-xs text-rose-400 hover:underline">Sin fecha</button>
+                <button id="contextSaveDeadlineBtn" class="px-4 py-1.5 rounded-xl text-xs font-medium btn-accent">Guardar</button>
               </div>
             </div>
           `;
@@ -2332,9 +2304,9 @@
         openSubtasksTaskIds.delete(task.id);
         if (activeNoteTaskId === task.id) closeNotePopover();
         if (activeContextTaskId === task.id) closeContextPopover();
-        recordActivity(`Eliminó tarea "${task.title}"`);
         tasks = tasks.filter(t => t.id !== task.id);
-        saveTasks(true);
+        saveTasks(false);
+        recordActivity(`Eliminó tarea "${task.title}"`);
         showToast('Tarea eliminada');
       });
 
@@ -2342,11 +2314,10 @@
       const moveLeft = card.querySelector('.moveLeftBtn');
       if (moveLeft) {
         moveLeft.addEventListener('click', () => {
-          const oldStatus = task.status;
           task.status = task.status === 'done' ? 'doing' : 'todo';
           task.updatedAt = Date.now();
+          saveTasks(false);
           recordActivity(`Movió "${task.title}" a ${task.status === 'doing' ? 'En Progreso' : 'Por Hacer'}`);
-          saveTasks(true);
         });
       }
 
@@ -2356,13 +2327,13 @@
           const wasDone = task.status === 'done';
           task.status = task.status === 'todo' ? 'doing' : 'done';
           task.updatedAt = Date.now();
+          saveTasks(false);
           if (task.status === 'done' && !wasDone) {
             notifyDiscordTaskCompleted(task);
             recordActivity(`Completó entregable "${task.title}"`);
           } else {
             recordActivity(`Movió "${task.title}" a En Progreso`);
           }
-          saveTasks(true);
         });
       }
 
@@ -2385,20 +2356,17 @@
 
         const rect = card.getBoundingClientRect();
 
-        // Crear el hueco del tamaño exacto donde estaba la tarjeta
         const placeholder = document.createElement('div');
         placeholder.className = 'drag-slot-placeholder';
         placeholder.style.height = `${rect.height}px`;
 
         card.parentNode.insertBefore(placeholder, card);
 
-        // Desacoplar la tarjeta hacia la capa superior de la ventana
         document.body.appendChild(card);
         card.style.width = `${rect.width}px`;
         card.style.height = `${rect.height}px`;
         card.classList.add('kanban-card-floating');
 
-        // Posicionar exactamente bajo el cursor con efecto de elevación (scale + tilt)
         card.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0) scale(1.04) rotate(1.5deg)`;
 
         activeDrag = {
@@ -2436,10 +2404,8 @@
       const x = currentX - offsetX;
       const y = currentY - offsetY;
 
-      // Movimiento directo por GPU sin recalcular el DOM
       card.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.04) rotate(1.5deg)`;
 
-      // Detectar sobre qué columna está volando el cursor
       const elementBelow = document.elementFromPoint(currentX, currentY);
       if (!elementBelow) return;
 
@@ -2479,18 +2445,19 @@
       const { card, task, placeholder } = activeDrag;
       activeDrag = null;
 
-      // Animar el aterrizaje suave hacia el hueco (o regreso a su origen)
       const targetRect = placeholder.getBoundingClientRect();
       card.classList.add('kanban-card-settling');
       card.style.transform = `translate3d(${targetRect.left}px, ${targetRect.top}px, 0) scale(1) rotate(0deg)`;
 
       setTimeout(() => {
         const parentZone = placeholder.closest('.cards-dropzone');
-        if (parentZone) {
-          const newStatus = parentZone.getAttribute('data-status');
-          const wasDone = task.status === 'done';
+        let movedColumn = false;
+        let newStatus = null;
+        const wasDone = task.status === 'done';
 
-          // Calcular el nuevo orden exacto en el arreglo de tareas
+        if (parentZone) {
+          newStatus = parentZone.getAttribute('data-status');
+
           const nextCard = placeholder.nextElementSibling;
           const oldIdx = tasks.findIndex(t => t.id === task.id);
           if (oldIdx !== -1) tasks.splice(oldIdx, 1);
@@ -2507,21 +2474,26 @@
           if (newStatus && task.status !== newStatus) {
             task.status = newStatus;
             task.updatedAt = Date.now();
-            const statusNames = { todo: 'Por Hacer', doing: 'En Progreso', done: 'Completadas' };
-            recordActivity(`Movió "${task.title}" a ${statusNames[newStatus] || newStatus}`);
-            if (newStatus === 'done' && !wasDone) {
-              notifyDiscordTaskCompleted(task);
-            }
-            showToast(`Movido a ${statusNames[newStatus]}`);
+            movedColumn = true;
           } else {
             task.updatedAt = Date.now();
           }
         }
 
-        // Limpiar nodo flotante y renderizar tablero limpio
         if (card.parentNode) card.parentNode.removeChild(card);
         if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
-        saveTasks(true);
+
+        if (movedColumn) {
+          const statusNames = { todo: 'Por Hacer', doing: 'En Progreso', done: 'Completadas' };
+          saveTasks(false);
+          recordActivity(`Movió "${task.title}" a ${statusNames[newStatus] || newStatus}`);
+          if (newStatus === 'done' && !wasDone) {
+            notifyDiscordTaskCompleted(task);
+          }
+          showToast(`Movido a ${statusNames[newStatus]}`);
+        } else {
+          saveTasks(true);
+        }
       }, 220);
     }
 
@@ -2569,8 +2541,8 @@
       tasks.unshift(newTask);
       titleInput.value = '';
       deadlineInput.value = '';
+      saveTasks(false);
       recordActivity(`Creó entregable "${title}" (${phaseSelect.value})`);
-      saveTasks(true);
       showToast('Tarea agregada');
     });
 
